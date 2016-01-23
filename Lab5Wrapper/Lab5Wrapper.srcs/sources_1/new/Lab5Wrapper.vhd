@@ -39,7 +39,7 @@ architecture Behavioral of Lab5Wrapper is
     signal ADDR_S       : std_logic_vector (9 downto 0);
     
 begin
-    program_counter    : programCounter port map (FROM_IMMED, FROM_STACK, INTERCEPT, SEL, PC_OE, PC_LD, PC_INC, PC_RST, CLK, open, ADDR_S);
+    program_counter    : counter port map (FROM_IMMED, FROM_STACK, INTERCEPT, SEL, PC_OE, PC_LD, PC_INC, PC_RST, CLK, open, ADDR_S);
     instruction_reader : prog_rom       port map (ADDR_S, CLK, INSTRUCTION_BITS);
     
 end Behavioral;
