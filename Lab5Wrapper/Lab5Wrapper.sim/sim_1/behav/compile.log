@@ -1,0 +1,10 @@
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/joseph/Documents/Cal Poly/Year 2/Winter/CPE 233/Git/counter/counter/counter.srcs/sources_1/new/programCounter.vhd" into library xil_defaultlib
+INFO: [VRFC 10-307] analyzing entity programCounter
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/joseph/Documents/Cal Poly/Year 2/Winter/CPE 233/Git/Lab5Wrapper/Lab5Wrapper.srcs/sources_1/new/prog_rom.vhd" into library xil_defaultlib
+INFO: [VRFC 10-307] analyzing entity prog_rom
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/joseph/Documents/Cal Poly/Year 2/Winter/CPE 233/Git/counter/counter/counter.srcs/sources_1/new/counter.vhd" into library xil_defaultlib
+INFO: [VRFC 10-307] analyzing entity counter
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/joseph/Documents/Cal Poly/Year 2/Winter/CPE 233/Git/Lab5Wrapper/Lab5Wrapper.srcs/sources_1/new/Lab5Wrapper.vhd" into library xil_defaultlib
+INFO: [VRFC 10-307] analyzing entity Lab5Wrapper
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/joseph/Documents/Cal Poly/Year 2/Winter/CPE 233/Git/Lab5Wrapper/Lab5Wrapper.srcs/sim_1/new/Lab5WrapperTB.vhd" into library xil_defaultlib
+INFO: [VRFC 10-307] analyzing entity Lab5WrapperTB

@@ -74,8 +74,8 @@ begin
         wait for 2 * Clk_period;
         ld_s <= '0';
         inc_s <= '1';
-        wait for Clk_period;
-        assert (inst_s = "0001000000");
+        --wait for Clk_period;
+        assert (inst_s = "110110101000000101");
         
         wait for 100 * Clk_period;
         wait;

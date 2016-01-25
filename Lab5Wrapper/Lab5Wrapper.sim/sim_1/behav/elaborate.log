@@ -1,0 +1,29 @@
+Vivado Simulator 2015.3
+Copyright 1986-1999, 2001-2015 Xilinx, Inc. All Rights Reserved.
+Running: C:/Xilinx/Vivado/2015.3/bin/unwrapped/win64.o/xelab.exe -wto a6b9c7e149c44f89b56229ef88a53f2c --debug typical --relax --mt 2 -L xil_defaultlib -L secureip --snapshot Lab5WrapperTB_behav xil_defaultlib.Lab5WrapperTB -log elaborate.log 
+Using 2 slave threads.
+Starting static elaboration
+Completed static elaboration
+Starting simulation data flow analysis
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling package std.standard
+Compiling package ieee.std_logic_1164
+Compiling package ieee.std_logic_arith
+Compiling package ieee.std_logic_unsigned
+Compiling package unisim.vcomponents
+Compiling package ieee.std_logic_signed
+Compiling package std.textio
+Compiling package ieee.vital_timing
+Compiling package ieee.vital_primitives
+Compiling package unisim.vpkg
+Compiling package ieee.std_logic_textio
+Compiling architecture behavioral of entity xil_defaultlib.programCounter [programcounter_default]
+Compiling architecture behavioral of entity xil_defaultlib.counter [counter_default]
+Compiling architecture rb18_internal_vhdl_v of entity unisim.RB18_INTERNAL_VHDL [\RB18_INTERNAL_VHDL(18,0,0,false...]
+Compiling architecture ramb18e1_v of entity unisim.RAMB18E1 [\RAMB18E1(0,0,"00000000000000000...]
+Compiling architecture ramb16_s18_v of entity unisim.RAMB16_S18 [\RAMB16_S18("0000000000000000000...]
+Compiling architecture low_level_definition of entity xil_defaultlib.prog_rom [prog_rom_default]
+Compiling architecture behavioral of entity xil_defaultlib.Lab5Wrapper [lab5wrapper_default]
+Compiling architecture behavioral of entity xil_defaultlib.lab5wrappertb
+Built simulation snapshot Lab5WrapperTB_behav
