@@ -13,7 +13,7 @@ architecture Behavioral of ALU_TB is
            Sel    : in  STD_LOGIC_VECTOR (3 downto 0);
            SUM    : out STD_LOGIC_VECTOR (7 downto 0);
            C_FLAG : out STD_LOGIC;
-           Z_FLAG : out STD_LOGIC));
+           Z_FLAG : out STD_LOGIC);
     end component;
     
     signal a_s, b_s, sum_s : STD_LOGIC_VECTOR (7 downto 0);
@@ -27,7 +27,7 @@ begin
         -- Test cases take the form (A, B, Cin) => (sum, C_Flag, Z_Flag, time tested)
     
         -- test ADD
-        sel_s  <= 0x'0';
+        sel_s  <= 0x"0";
         
         -- (0xAA, 0xAA, 0) => (0x54, 1, 0, 10  ns)
         a_s    <= 0x"AA";
@@ -57,7 +57,7 @@ begin
           severity note;
         
         -- test ADDC
-        sel_s  <= 0x'1';
+        sel_s  <= 0x"1";
           
         -- (0xC8, 0x36, 1) => (0xFF, 0, 0, 30 ns)
         a_s    <= 0x"C8";
@@ -78,7 +78,7 @@ begin
           severity note;
         
         -- test SUB
-        sel_s  <= 0x'2';
+        sel_s  <= 0x"2";
         
         -- (0xC8, 0x64, 0) => (0x64, 0, 0, 50 ns)
         a_s    <= 0x"C8";
@@ -108,7 +108,7 @@ begin
           severity note;
           
         -- test SUBC
-        sel_s <= 0x'3';
+        sel_s <= 0x"3";
         
         -- (0xC8, 0x64, 0)
         a_s    <= 0x"C8";
@@ -147,7 +147,7 @@ begin
           severity note;
           
         -- test CMP
-        sel_s <= 0x'4';
+        sel_s <= 0x"4";
         
         -- (0x64, 0xC8, 1)
         a_s    <= 0x"64";
@@ -186,7 +186,7 @@ begin
           severity note;
         
         -- test AND
-        sel_s <= 0x'5';
+        sel_s <= 0x"5";
         
         -- (0xAA, 0xAA, 0)
         a_s    <= 0x"AA";
