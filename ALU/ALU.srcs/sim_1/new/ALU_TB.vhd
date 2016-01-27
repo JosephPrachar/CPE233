@@ -1,95 +1,210 @@
-----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
--- 
--- Create Date: 01/25/2016 11:28:45 AM
--- Design Name: 
--- Module Name: ALU_TB - Behavioral
--- Project Name: 
--- Target Devices: 
--- Tool Versions: 
--- Description: 
--- 
--- Dependencies: 
--- 
--- Revision:
--- Revision 0.01 - File Created
--- Additional Comments:
--- 
-----------------------------------------------------------------------------------
-
-
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.STD_LOGIC_UNSIGNED.ALL;
 
--- Uncomment the following library declaration if using
--- arithmetic functions with Signed or Unsigned values
---use IEEE.NUMERIC_STD.ALL;
-
--- Uncomment the following library declaration if instantiating
--- any Xilinx leaf cells in this code.
---library UNISIM;
---use UNISIM.VComponents.all;
-
 entity ALU_TB is
---  Port ( );
 end ALU_TB;
 
 architecture Behavioral of ALU_TB is
     component ALU Port ( 
-           A      : in STD_LOGIC_VECTOR (7 downto 0);
-           B      : in STD_LOGIC_VECTOR (7 downto 0);
-           C_IN   : in STD_LOGIC;
-           Sel    : in STD_LOGIC_VECTOR (3 downto 0);
+           A      : in  STD_LOGIC_VECTOR (7 downto 0);
+           B      : in  STD_LOGIC_VECTOR (7 downto 0);
+           C_IN   : in  STD_LOGIC;
+           Sel    : in  STD_LOGIC_VECTOR (3 downto 0);
            SUM    : out STD_LOGIC_VECTOR (7 downto 0);
            C_FLAG : out STD_LOGIC;
            Z_FLAG : out STD_LOGIC));
     end component;
     
-    signal a_s, b_s, sum : STD_LOGIC_VECTOR (7 downto 0);
+    signal a_s, b_s, sum_s : STD_LOGIC_VECTOR (7 downto 0);
     signal sel_s : STD_LOGIC_VECTOR (3 downto 0);
     signal c_in_s, c_out_s, zero_s : STD_LOGIC;
 begin
-
-    process
-    begin
+    
+    uut : ALU port map (a_s, b_s, c_in_s, sel_s, sum_s, c_out_s, zero_s);
+    
+    test : process begin
         -- Test cases take the form (A, B, Cin) => (sum, C_Flag, Z_Flag, time tested)
     
         -- test ADD
+        sel_s  <= 0x'0';
         
         -- (0xAA, 0xAA, 0) => (
+        a_s    <= 0x"AA";
+        b_s    <= 0x"AA";
+        c_in_s <= '0';
+        wait for 10ns;
+        assert (sum_s = 0x"54" and c_out_s = '1' and zero_s = '0')
+          report "ADD test 0 failed"
+          severity note;
+        
         -- (0x0A, 0xA0, 1)
+        a_s    <= 0x"0A";
+        b_s    <= 0x"A0";
+        c_in_s <= '1';
+        wait for 10ns;
+        assert (sum_s = 0x"AA" and c_out_s = '0' and zero_s = '0')
+          report "ADD test 1 failed"
+          severity note;
+
         -- (0xFF, 0x01, 0)
+        a_s    <= 0x"FF";
+        b_s    <= 0x"01";
+        c_in_s <= '0';
+        wait for 10ns;
+        assert (sum_s = 0x"00" and c_out_s = '1' and zero_s = '1')
+          report "ADD test 2 failed"
+          severity note;
         
         -- test ADDC
-        
+        sel_s  <= 0x'1';
+          
         -- (0xC8, 0x36, 1)
+        a_s    <= 0x"C8";
+        b_s    <= 0x"36";
+        c_in_s <= '1';
+        wait for 10ns;
+        assert (sum_s = 0x"FF" and c_out_s = '0' and zero_s = '0')
+          report "ADDC test 0 failed"
+          severity note;
+        
         -- (0xC8, 0x37, 1)
+        a_s    <= 0x"C8";
+        b_s    <= 0x"37";
+        c_in_s <= '1';
+        wait for 10ns;
+        assert (sum_s = 0x"00" and c_out_s = '1' and zero_s = '1')
+          report "ADDC test 1 failed"
+          severity note;
         
         -- test SUB
+        sel_s  <= 0x'2';
         
         -- (0xC8, 0x64, 0)
+        a_s    <= 0x"C8";
+        b_s    <= 0x"64";
+        c_in_s <= '0';
+        wait for 10ns;
+        assert (sum_s = 0x"44" and c_out_s = '0' and zero_s = '0')
+          report "SUB test 0 failed"
+          severity note;
+        
         -- (0xC8, 0x64, 1)
+        a_s    <= 0x"C8";
+        b_s    <= 0x"64";
+        c_in_s <= '1';
+        wait for 10ns;
+        assert (sum_s = 0x"44" and c_out_s = '0' and zero_s = '0')
+          report "SUB test 1 failed"
+          severity note;
+        
         -- (0x64, 0xC8, 0)
-        
+        a_s    <= 0x"64";
+        b_s    <= 0x"C8";
+        c_in_s <= '0';
+        wait for 10ns;
+        assert (sum_s = 0x"BC" and c_out_s = '1' and zero_s = '0')
+          report "SUB test 2 failed"
+          severity note;
+          
         -- test SUBC
+        sel_s <= 0x'3';
         
         -- (0xC8, 0x64, 0)
-        -- (0xC8, 0x64, 1)
-        -- (0x64, 0xC8, )
+        a_s    <= 0x"C8";
+        b_s    <= 0x"64";
+        c_in_s <= '0';
+        wait for 10ns;
+        assert (sum_s = 0x"44" and c_out_s = '0' and zero_s = '0')
+          report "SUBC test 0 failed"
+          severity note;
         
-        -- test CMP
+        -- (0xC8, 0x64, 1)
+        a_s    <= 0x"C8";
+        b_s    <= 0x"64";
+        c_in_s <= '1';
+        wait for 10ns;
+        assert (sum_s = 0x"43" and c_out_s = '0' and zero_s = '0')
+          report "SUBC test 1 failed"
+          severity note;
+        
+        -- (0x64, 0xC8, 0)
+        a_s    <= 0x"64";
+        b_s    <= 0x"C8";
+        c_in_s <= '0';
+        wait for 10ns;
+        assert (sum_s = 0x"BC" and c_out_s = '1' and zero_s = '0')
+          report "SUBC test 2 failed"
+          severity note;
         
         -- (0x64, 0xC8, 1)
+        a_s    <= 0x"64";
+        b_s    <= 0x"C8";
+        c_in_s <= '1';
+        wait for 10ns;
+        assert (sum_s = 0x"BB" and c_out_s = '1' and zero_s = '0')
+          report "SUBC test 3 failed"
+          severity note;
+          
+        -- test CMP
+        sel_s <= 0x'4';
+        
+        -- (0x64, 0xC8, 1)
+        a_s    <= 0x"64";
+        b_s    <= 0x"C8";
+        c_in_s <= '1';
+        wait for 10ns;
+        assert (c_out_s = '1' and zero_s = '0')
+          report "CMP test 0 failed"
+          severity note;
+        
         -- (0xAA, 0xFF, 0)
+        a_s    <= 0x"AA";
+        b_s    <= 0x"FF";
+        c_in_s <= '0';
+        wait for 10ns;
+        assert (c_out_s = '1' and zero_s = '0')
+          report "CMP test 1 failed"
+          severity note;
+        
         -- (0xFF, 0xAA, 0)
+        a_s    <= 0x"FF";
+        b_s    <= 0x"AA";
+        c_in_s <= '0';
+        wait for 10ns;
+        assert (c_out_s = '0' and zero_s = '0')
+          report "CMP test 2 failed"
+          severity note;
+          
         -- (0xAA, 0xAA, 0)
+        a_s    <= 0x"AA";
+        b_s    <= 0x"AA";
+        c_in_s <= '0';
+        wait for 10ns;
+        assert (c_out_s = '0' and zero_s = '1')
+          report "CMP test 3 failed"
+          severity note;
         
         -- test AND
+        sel_s <= 0x'5';
         
         -- (0xAA, 0xAA, 0)
+        a_s    <= 0x"AA";
+        b_s    <= 0x"AA";
+        c_in_s <= '0';
+        wait for 10ns;
+        assert (sum_s = 0x"AA" and c_out_s = '0' and zero_s = '0')
+          report "AND test 0 failed"
+          severity note;
+        
         -- (0x03, 0xAA, 0)
+        a_s    <= 0x"03";
+        b_s    <= 0x"AA";
+        c_in_s <= '0';
+        wait for 10ns;
+        assert (sum_s = 0x"02" and c_out_s = '0' and zero_s = '0')
+          report "AND test 1 failed"
+          severity note;
         
         -- test OR
         
