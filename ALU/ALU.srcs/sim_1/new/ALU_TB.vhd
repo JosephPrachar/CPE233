@@ -29,7 +29,7 @@ begin
         -- test ADD
         sel_s  <= 0x'0';
         
-        -- (0xAA, 0xAA, 0) => (
+        -- (0xAA, 0xAA, 0) => (0x54, 1, 0, 10  ns)
         a_s    <= 0x"AA";
         b_s    <= 0x"AA";
         c_in_s <= '0';
@@ -38,7 +38,7 @@ begin
           report "ADD test 0 failed"
           severity note;
         
-        -- (0x0A, 0xA0, 1)
+        -- (0x0A, 0xA0, 1) => (0xAA, 0, 0, 10 ns)
         a_s    <= 0x"0A";
         b_s    <= 0x"A0";
         c_in_s <= '1';
@@ -47,7 +47,7 @@ begin
           report "ADD test 1 failed"
           severity note;
 
-        -- (0xFF, 0x01, 0)
+        -- (0xFF, 0x01, 0) => (0x00, 1, 1, 20 ns)
         a_s    <= 0x"FF";
         b_s    <= 0x"01";
         c_in_s <= '0';
@@ -59,7 +59,7 @@ begin
         -- test ADDC
         sel_s  <= 0x'1';
           
-        -- (0xC8, 0x36, 1)
+        -- (0xC8, 0x36, 1) => (0xFF, 0, 0, 30 ns)
         a_s    <= 0x"C8";
         b_s    <= 0x"36";
         c_in_s <= '1';
@@ -68,7 +68,7 @@ begin
           report "ADDC test 0 failed"
           severity note;
         
-        -- (0xC8, 0x37, 1)
+        -- (0xC8, 0x37, 1) => (0x00, 1, 1, 40 ns)
         a_s    <= 0x"C8";
         b_s    <= 0x"37";
         c_in_s <= '1';
@@ -80,7 +80,7 @@ begin
         -- test SUB
         sel_s  <= 0x'2';
         
-        -- (0xC8, 0x64, 0)
+        -- (0xC8, 0x64, 0) => (0x64, 0, 0, 50 ns)
         a_s    <= 0x"C8";
         b_s    <= 0x"64";
         c_in_s <= '0';
@@ -89,7 +89,7 @@ begin
           report "SUB test 0 failed"
           severity note;
         
-        -- (0xC8, 0x64, 1)
+        -- (0xC8, 0x64, 1) => (0x64, 0, 0, 60 ns)
         a_s    <= 0x"C8";
         b_s    <= 0x"64";
         c_in_s <= '1';
@@ -98,7 +98,7 @@ begin
           report "SUB test 1 failed"
           severity note;
         
-        -- (0x64, 0xC8, 0)
+        -- (0x64, 0xC8, 0) => (0x64, 1, 0, 70 ns)
         a_s    <= 0x"64";
         b_s    <= 0x"C8";
         c_in_s <= '0';
