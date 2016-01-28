@@ -53,22 +53,24 @@ begin
             when "0010" => temp_s <= ('0' & A) - B; -- sub
             when "0011" => temp_s <= ('0' & A) - B - C_IN; -- subc
             when "0100" => temp_s <= ('0' & A) - B; -- cmp
-            when "0101" => temp_s <= ('0' & A) and B; -- and
-            when "0110" => temp_s <= ('0' & A) or B; -- or
-            when "0111" => temp_s <= ('0' & A) xor B; -- exor
-            when "1000" => temp_s <= ('0' & A) and B; -- test
+            when "0101" => temp_s <= ('0' & A) and ('0' & B); -- and
+            when "0110" => temp_s <= ('0' & A) or ('0' & B); -- or
+            when "0111" => temp_s <= ('0' & A) xor ('0' & B); -- exor
+            when "1000" => temp_s <= ('0' & A) and ('0' & B); -- test
             when "1001" => temp_s <= A & C_IN; -- lsl
             when "1010" => temp_s <= A(0) & C_IN & A (7 downto 1); -- lsr
             when "1011" => temp_s <= A(7 downto 0) & A(7); -- rol
             when "1100" => temp_s <= A(0) & A(0) & A(7 downto 1); -- ror
-            when "1101" => temp_s <= A(0) & A(7) & A(7 downto 0); -- asr
+            when "1101" => temp_s <= A(0) & A(7) & A(7 downto 1); -- asr
             when "1110" => temp_s <= '0' & B; -- mov
             when "1111" => temp_s <= "000000000"; -- unused
+            when others => temp_s <= "000000000";
         end case;
     end process;
     
-    SUM <= temp_s (7 downto 0);
+    SUM <= not(temp_s (7 downto 0)) + 1 when ((SEL = "0010" or SEL = "0011") and temp_s(8) = '1')
+           else temp_s(7 downto 0);
     
-    Z_FLAG <= '1' when (temp_s ="-00000000") else '0';
+    Z_FLAG <= '1' when (temp_s = "000000000" or temp_s = "100000000") else '0';
     C_FLAG <= temp_s(8); 
 end Behavioral;

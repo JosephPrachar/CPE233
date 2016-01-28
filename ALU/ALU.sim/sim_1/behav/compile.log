@@ -1,0 +1,4 @@
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/joseph/Documents/Cal Poly/Year 2/Winter/CPE 233/Git/ALU/ALU.srcs/sources_1/new/ALU.vhd" into library xil_defaultlib
+INFO: [VRFC 10-307] analyzing entity ALU
+INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/joseph/Documents/Cal Poly/Year 2/Winter/CPE 233/Git/ALU/ALU.srcs/sim_1/new/ALU_TB.vhd" into library xil_defaultlib
+INFO: [VRFC 10-307] analyzing entity ALU_TB

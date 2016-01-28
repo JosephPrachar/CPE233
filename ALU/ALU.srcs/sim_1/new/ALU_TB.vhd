@@ -36,7 +36,7 @@ begin
         wait for 10ns;
         assert (sum_s = x"54" and c_out_s = '1' and zero_s = '0')
           report "ADD test 0 failed"
-          severity note;
+          severity error;
         
         -- (0x0A, 0xA0, 1) => (0xAA, 0, 0, 10 ns)
         a_s    <= x"0A";
@@ -45,7 +45,7 @@ begin
         wait for 10ns;
         assert (sum_s = x"AA" and c_out_s = '0' and zero_s = '0')
           report "ADD test 1 failed"
-          severity note;
+          severity error;
 
         -- (0xFF, 0x01, 0) => (0x00, 1, 1, 20 ns)
         a_s    <= x"FF";
@@ -54,7 +54,7 @@ begin
         wait for 10ns;
         assert (sum_s = x"00" and c_out_s = '1' and zero_s = '1')
           report "ADD test 2 failed"
-          severity note;
+          severity error;
         
         -- test ADDC
         sel_s  <= x"1";
@@ -85,7 +85,7 @@ begin
         b_s    <= x"64";
         c_in_s <= '0';
         wait for 10ns;
-        assert (sum_s = x"44" and c_out_s = '0' and zero_s = '0')
+        assert (sum_s = x"64" and c_out_s = '0' and zero_s = '0')
           report "SUB test 0 failed"
           severity note;
         
@@ -94,7 +94,7 @@ begin
         b_s    <= x"64";
         c_in_s <= '1';
         wait for 10ns;
-        assert (sum_s = x"44" and c_out_s = '0' and zero_s = '0')
+        assert (sum_s = x"64" and c_out_s = '0' and zero_s = '0')
           report "SUB test 1 failed"
           severity note;
         
@@ -103,7 +103,7 @@ begin
         b_s    <= x"C8";
         c_in_s <= '0';
         wait for 10ns;
-        assert (sum_s = x"BC" and c_out_s = '1' and zero_s = '0')
+        assert (sum_s = x"64" and c_out_s = '1' and zero_s = '0')
           report "SUB test 2 failed"
           severity note;
           
@@ -115,7 +115,7 @@ begin
         b_s    <= x"64";
         c_in_s <= '0';
         wait for 10ns;
-        assert (sum_s = x"44" and c_out_s = '0' and zero_s = '0')
+        assert (sum_s = x"64" and c_out_s = '0' and zero_s = '0')
           report "SUBC test 0 failed"
           severity note;
         
@@ -124,7 +124,7 @@ begin
         b_s    <= x"64";
         c_in_s <= '1';
         wait for 10ns;
-        assert (sum_s = x"43" and c_out_s = '0' and zero_s = '0')
+        assert (sum_s = x"63" and c_out_s = '0' and zero_s = '0')
           report "SUBC test 1 failed"
           severity note;
         
@@ -133,7 +133,7 @@ begin
         b_s    <= x"C8";
         c_in_s <= '0';
         wait for 10ns;
-        assert (sum_s = x"BC" and c_out_s = '1' and zero_s = '0')
+        assert (sum_s = x"64" and c_out_s = '1' and zero_s = '0')
           report "SUBC test 2 failed"
           severity note;
         
@@ -142,7 +142,7 @@ begin
         b_s    <= x"C8";
         c_in_s <= '1';
         wait for 10ns;
-        assert (sum_s = x"BB" and c_out_s = '1' and zero_s = '0')
+        assert (sum_s = x"65" and c_out_s = '1' and zero_s = '0')
           report "SUBC test 3 failed"
           severity note;
           
@@ -249,7 +249,7 @@ begin
 	wait for 10ns;
 	assert (zero_s = '0')
 	  report "TEST test 0 failed"
-	  severity notice;
+	  severity note;
 
         -- (0xAA, 0xAA, 0)
 	a_s    <= x"AA";
@@ -298,7 +298,7 @@ begin
 	b_s    <= x"43";
 	c_in_s <= '1';
 	wait for 10ns;
-	assert (sum_s = x"A0" and c_out_s = '0' and zero_s = '0')
+	assert (sum_s = x"C0" and c_out_s = '0' and zero_s = '0')
 	  report "LSR test 1 failed"
 	  severity note;
 
@@ -367,7 +367,7 @@ begin
 	  severity note;
 
         -- test MOV
-        sel_s  <= 0x"E";
+        sel_s  <= x"E";
 
         -- (0x50, 0x30, 0)
 	a_s    <= x"50";
@@ -386,6 +386,8 @@ begin
 	assert (sum_s = x"22" and c_out_s = '0' and zero_s = '0')
 	  report "MOV test 1 failed"
 	  severity note;
+	  
+	wait;
 
     end process;
 
