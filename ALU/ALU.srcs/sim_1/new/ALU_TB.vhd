@@ -36,7 +36,7 @@ begin
         wait for 5ns;
         assert (sum_s = x"54" and c_out_s = '1' and zero_s = '0')
           report "ADD test 0 failed"
-          severity error;
+          severity note;
         
         -- (0x0A, 0xA0, 1) => (0xAA, 0, 0, 10 ns)
         a_s    <= x"0A";
@@ -45,7 +45,7 @@ begin
         wait for 5ns;
         assert (sum_s = x"AA" and c_out_s = '0' and zero_s = '0')
           report "ADD test 1 failed"
-          severity error;
+          severity note;
 
         -- (0xFF, 0x01, 0) => (0x00, 1, 1, 20 ns)
         a_s    <= x"FF";
@@ -54,7 +54,7 @@ begin
         wait for 5ns;
         assert (sum_s = x"00" and c_out_s = '1' and zero_s = '1')
           report "ADD test 2 failed"
-          severity error;
+          severity note;
         
         -- test ADDC
         sel_s  <= x"1";
@@ -210,97 +210,97 @@ begin
         sel_s  <= x"6";
 	
         -- (0xAA, 0xAA, 0)
-	a_s    <= x"AA";
-	b_s    <= x"AA";
-	c_in_s <= '0';
-	wait for 5ns;
-	assert (sum_s = x"AA" and c_out_s = '0' and zero_s = '0')
-	  report "OR test 0 failed"
-	  severity note;
+	    a_s    <= x"AA";
+	    b_s    <= x"AA";
+	    c_in_s <= '0';
+	    wait for 5ns;
+	    assert (sum_s = x"AA" and c_out_s = '0' and zero_s = '0')
+	      report "OR test 0 failed"
+	      severity note;
 
         -- (0x03, 0xAA, 0)
         a_s    <= x"03";
-	b_s    <= x"AA";
-	c_in_s <= '0';
-	wait for 5ns;
-	assert (sum_s = x"AB" and c_out_s = '0' and zero_s = '0')
-	  report "OR test 1 failed"
-	  severity note;
+	    b_s    <= x"AA";
+	    c_in_s <= '0';
+	    wait for 5ns;
+	    assert (sum_s = x"AB" and c_out_s = '0' and zero_s = '0')
+	      report "OR test 1 failed"
+	      severity note;
 
         -- test XOR
         sel_s  <= x"7";
 
         -- (0xAA, 0xAA, 0)
         a_s    <= x"AA";
-	b_s    <= x"AA";
-	c_in_s <= '0';
-	wait for 5ns;
-	assert (sum_s = x"00" and c_out_s = '0' and zero_s = '1')
-	  report "XOR test 0 failed"
-	  severity note;
+	    b_s    <= x"AA";
+	    c_in_s <= '0';
+	    wait for 5ns;
+	    assert (sum_s = x"00" and c_out_s = '0' and zero_s = '1')
+	      report "XOR test 0 failed"
+	      severity note;
 
         -- test TEST
         sel_s  <= x"8";
 
         -- (0x03, 0xAA, 0)
-	a_s    <= x"03";
-	b_s    <= x"AA";
-	c_in_s <= '0';
-	wait for 5ns;
-	assert (zero_s = '0')
-	  report "TEST test 0 failed"
-	  severity note;
+	    a_s    <= x"03";
+	    b_s    <= x"AA";
+	    c_in_s <= '0';
+	    wait for 5ns;
+	    assert (zero_s = '0')
+	      report "TEST test 0 failed"
+	      severity note;
 
         -- (0xAA, 0xAA, 0)
-	a_s    <= x"AA";
-	b_s    <= x"AA";
-	c_in_s <= '0';
-	wait for 5ns;
-	assert (zero_s = '0')
-	  report "TEST test 1 failed"
-	  severity note;
+	    a_s    <= x"AA";
+	    b_s    <= x"AA";
+	    c_in_s <= '0';
+	    wait for 5ns;
+	    assert (zero_s = '0')
+	      report "TEST test 1 failed"
+	      severity note;
 
         -- (0x55, 0xAA, 0)
         a_s    <= x"55";
-	b_s    <= x"AA";
-	c_in_s <= '0';
-	wait for 5ns;
-	assert (zero_s = '1')
-	  report "TEST test 2 failed"
-	  severity note;
+	    b_s    <= x"AA";
+	    c_in_s <= '0';
+	    wait for 5ns;
+	    assert (zero_s = '1')
+	      report "TEST test 2 failed"
+	      severity note;
 
         -- test LSL
         sel_s  <= x"9";
 
         -- (0x01, 0x12, 0)
         a_s    <= x"01";
-	b_s    <= x"12";
-	c_in_s <= '0';
-	wait for 5ns;
-	assert (sum_s = x"02" and c_out_s = '0' and zero_s = '0')
-	  report "LSL test 0 failed"
-	  severity note;
+	    b_s    <= x"12";
+	    c_in_s <= '0';
+	    wait for 5ns;
+	    assert (sum_s = x"02" and c_out_s = '0' and zero_s = '0')
+	      report "LSL test 0 failed"
+	      severity note;
 
         -- test LSR
         sel_s  <= x"A";
 
         -- (0x80, 0x33, 0)
-	a_s    <= x"80";
-	b_s    <= x"33";
-	c_in_s <= '0';
-	wait for 5ns;
-	assert (sum_s = x"40" and c_out_s = '0' and zero_s = '0')
-	  report "LSR test 0 failed"
-	  severity note;
+	    a_s    <= x"80";
+	    b_s    <= x"33";
+	    c_in_s <= '0';
+	    wait for 5ns;
+	    assert (sum_s = x"40" and c_out_s = '0' and zero_s = '0')
+	      report "LSR test 0 failed"
+	      severity note;
 
         -- (0x80, 0x43, 1)
         a_s    <= x"80";
-	b_s    <= x"43";
-	c_in_s <= '1';
-	wait for 5ns;
-	assert (sum_s = x"C0" and c_out_s = '0' and zero_s = '0')
-	  report "LSR test 1 failed"
-	  severity note;
+	    b_s    <= x"43";
+	    c_in_s <= '1';
+	    wait for 5ns;
+	    assert (sum_s = x"C0" and c_out_s = '0' and zero_s = '0')
+	      report "LSR test 1 failed"
+	      severity note;
 
 
         -- test ROL
@@ -308,87 +308,86 @@ begin
 
         -- (0x01, 0xAB, 1)
         a_s    <= x"01";
-	b_s    <= x"AB";
-	c_in_s <= '1';
-	wait for 5ns;
-	assert (sum_s = x"02" and c_out_s = '0' and zero_s = '0')
-	  report "ROL test 0 failed"
-	  severity note;
+	    b_s    <= x"AB";
+	    c_in_s <= '1';
+	    wait for 5ns;
+	    assert (sum_s = x"02" and c_out_s = '0' and zero_s = '0')
+	      report "ROL test 0 failed"
+	      severity note;
 
         -- test ROR
         sel_s  <= x"C";
 
         -- (0xAA, 0xF2, 0)
-	a_s    <= x"AA";
-	b_s    <= x"F2";
-	c_in_s <= '0';
-	wait for 5ns;
-	assert (sum_s = x"55" and c_out_s = '0' and zero_s = '0')
-	  report "ROR test 0 failed"
-	  severity note;
+	    a_s    <= x"AA";
+	    b_s    <= x"F2";
+	    c_in_s <= '0';
+	    wait for 5ns;
+	    assert (sum_s = x"55" and c_out_s = '0' and zero_s = '0')
+	      report "ROR test 0 failed"
+	      severity note;
 
         -- (0x80, 0x3C, 0)
-	a_s    <= x"80";
-	b_s    <= x"3C";
-	c_in_s <= '0';
-	wait for 5ns;
-	assert (sum_s = x"40" and c_out_s = '0' and zero_s = '0')
-	  report "ROR test 1 failed"
-	  severity note;
+	    a_s    <= x"80";
+	    b_s    <= x"3C";
+	    c_in_s <= '0';
+	    wait for 5ns;
+	    assert (sum_s = x"40" and c_out_s = '0' and zero_s = '0')
+	      report "ROR test 1 failed"
+	      severity note;
 
         -- (0x80, 0x98, 1)
         a_s    <= x"80";
-	b_s    <= x"98";
-	c_in_s <= '1';
-	wait for 5ns;
-	assert (sum_s = x"40" and c_out_s = '0' and zero_s = '0')
-	  report "ROR test 2 failed"
-	  severity note;
+	    b_s    <= x"98";
+	    c_in_s <= '1';
+	    wait for 5ns;
+	    assert (sum_s = x"40" and c_out_s = '0' and zero_s = '0')
+	      report "ROR test 2 failed"
+	      severity note;
 
         -- test ASR
         sel_s <= x"D";
 
         -- (0x80, 0x81, 0)
-	a_s    <= x"80";
-	b_s    <= x"81";
-	c_in_s <= '0';
-	wait for 5ns;
-	assert (sum_s = x"C0" and c_out_s = '0' and zero_s = '0')
-	  report "ASR test 0 failed"
-	  severity note;
+	    a_s    <= x"80";
+	    b_s    <= x"81";
+	    c_in_s <= '0';
+	    wait for 5ns;
+	    assert (sum_s = x"C0" and c_out_s = '0' and zero_s = '0')
+	      report "ASR test 0 failed"
+	      severity note;
 
         -- (0x40, 0xB2, 0)
         a_s    <= x"40";
-	b_s    <= x"B2";
-	c_in_s <= '0';
-	wait for 5ns;
-	assert (sum_s = x"20" and c_out_s = '0' and zero_s = '0')
-	  report "ASR test 1 failed"
-	  severity note;
+	    b_s    <= x"B2";
+	    c_in_s <= '0';
+	    wait for 5ns;
+	    assert (sum_s = x"20" and c_out_s = '0' and zero_s = '0')
+	      report "ASR test 1 failed"
+	      severity note;
 
         -- test MOV
         sel_s  <= x"E";
 
         -- (0x50, 0x30, 0)
-	a_s    <= x"50";
-	b_s    <= x"30";
-	c_in_s <= '0';
-	wait for 5ns;
-	assert (sum_s = x"30" and c_out_s = '0' and zero_s = '0')
-	  report "MOV test 0 failed"
-	  severity note;
+	    a_s    <= x"50";
+	    b_s    <= x"30";
+	    c_in_s <= '0';
+	    wait for 5ns;
+	    assert (sum_s = x"30" and c_out_s = '0' and zero_s = '0')
+	      report "MOV test 0 failed"
+	      severity note;
 
         -- (0x43, 0x22, 1)
-	a_s    <= x"43";
-	b_s    <= x"22";
-	c_in_s <= '1';
-	wait for 5ns;
-	assert (sum_s = x"22" and c_out_s = '0' and zero_s = '0')
-	  report "MOV test 1 failed"
-	  severity note;
+	    a_s    <= x"43";
+	    b_s    <= x"22";
+	    c_in_s <= '1';
+	    wait for 5ns;
+	    assert (sum_s = x"22" and c_out_s = '0' and zero_s = '0')
+	      report "MOV test 1 failed"
+	      severity note;
 	  
 	wait;
-
     end process;
 
 end Behavioral;
