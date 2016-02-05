@@ -22,7 +22,9 @@ begin
     process (PC_LD, PC_INC, pcCountSig, CLK)
     begin
         if (rising_edge(CLK)) then
-            if (PC_LD = '1') then
+            if (RST = '1') then
+                pcCountSig <= "0000000000";
+            elsif (PC_LD = '1') then
                 pcCountSig <= D_IN;
             elsif (PC_INC = '1') then
                 pcCountSig <= pcCountSig + 1;
@@ -30,10 +32,8 @@ begin
         end if;
     end process;
 
-    PC_COUNT <= pcCountSig when RST = '0'
-           else (others => '0');
-    PC_TRI <= (others => '0') when RST = '1'
-         else pcCountSig when PC_OE = '1'
+    PC_COUNT <= pcCountSig;
+    PC_TRI <= pcCountSig when PC_OE = '1'
          else (others => 'Z');
 
 end Behavioral;

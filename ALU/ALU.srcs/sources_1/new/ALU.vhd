@@ -32,7 +32,7 @@ use IEEE.STD_LOGIC_UNSIGNED.ALL;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity ALU is
+entity alu is
     Port ( A : in STD_LOGIC_VECTOR (7 downto 0);
            B : in STD_LOGIC_VECTOR (7 downto 0);
            C_IN : in STD_LOGIC;
@@ -40,9 +40,9 @@ entity ALU is
            SUM : out STD_LOGIC_VECTOR (7 downto 0);
            C_FLAG : out STD_LOGIC;
            Z_FLAG : out STD_LOGIC);
-end ALU;
+end alu;
 
-architecture Behavioral of ALU is
+architecture Behavioral of alu is
     signal temp_s : STD_LOGIC_VECTOR (8 downto 0);
 begin
     process (A, B, C_IN, SEL)

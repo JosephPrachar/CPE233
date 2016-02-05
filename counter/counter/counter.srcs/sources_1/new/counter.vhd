@@ -28,7 +28,7 @@ architecture Behavioral of counter is
                PC_TRI : out STD_LOGIC_VECTOR (9 downto 0));
     end component;
 
-    signal D_IN : STD_LOGIC_VECTOR (9 downto 0);
+    signal D_IN : STD_LOGIC_VECTOR (9 downto 0) := "0000000000";
 
 begin
 

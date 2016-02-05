@@ -14,7 +14,7 @@ use IEEE.NUMERIC_STD.ALL;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity CONTROL is
+entity ControlUnit is
     Port (
         CLK           : in   STD_LOGIC;
         C             : in   STD_LOGIC;
@@ -53,7 +53,7 @@ entity CONTROL is
         I_FLAG_SET    : out  STD_LOGIC;
         I_FLAG_CLR    : out  STD_LOGIC;
         IO_OE         : out  STD_LOGIC);
-    end CONTROL;
+    end ControlUnit;
 
 architecture Behavioral of ControlUnit is    
     type state_type is (ST_init, ST_fet, ST_exec);
@@ -67,7 +67,7 @@ begin
     
     sync_p: process (CLK, NS, RST)
     begin
-        if (RST = '0') then
+        if (RST = '1') then
             PS <= ST_init;
         elsif (rising_edge(CLK)) then 
             PS <= NS;
@@ -90,8 +90,8 @@ begin
             SCR_WR        <= '0';   SCR_OE     <= '0';    SCR_ADDR_SEL <= "00";       					
             C_FLAG_SEL    <= "00";  C_FLAG_LD  <= '0';    C_FLAG_SET   <= '0';  C_FLAG_CLR <= '0';  SHAD_C_LD <= '0';   				
             Z_FLAG_SEL    <= "00";  Z_FLAG_LD  <= '0';    Z_FLAG_SET   <= '0';  Z_FLAG_CLR <= '0';  SHAD_Z_LD <= '0';   				
-            I_FLAG_SET    <= '0';   I_FLAG_CLR <= '0'; 
-            WRITE_STROBE  <= '0';   READ_STROBE <= '0';		 	
+            I_FLAG_SET    <= '0';   I_FLAG_CLR <= '0';    IO_OE        <= '0';
+            --WRITE_STROBE  <= '0';   READ_STROBE <= '0';		 	
         
         -- STATE: the fetch cycle -----------------------------------
         when ST_fet =>
@@ -104,8 +104,8 @@ begin
             SCR_WR        <= '0';   SCR_OE     <= '0';    SCR_ADDR_SEL <= "00";       					
             C_FLAG_SEL    <= "00";  C_FLAG_LD  <= '0';    C_FLAG_SET   <= '0';  C_FLAG_CLR <= '0';  SHAD_C_LD <= '0';   				
             Z_FLAG_SEL    <= "00";  Z_FLAG_LD  <= '0';    Z_FLAG_SET   <= '0';  Z_FLAG_CLR <= '0';  SHAD_Z_LD <= '0';   				
-            I_FLAG_SET    <= '0';   I_FLAG_CLR <= '0'; 
-            WRITE_STROBE  <= '0';   READ_STROBE <= '0';					
+            I_FLAG_SET    <= '0';   I_FLAG_CLR <= '0';    IO_OE        <= '0';
+            --WRITE_STROBE  <= '0';   READ_STROBE <= '0';					
             
         -- STATE: the execute cycle ---------------------------------
         when ST_exec =>
@@ -120,8 +120,8 @@ begin
             SCR_WR        <= '0';   SCR_OE      <= '0';    SCR_ADDR_SEL <= "00";       					
             C_FLAG_SEL    <= "00";  C_FLAG_LD   <= '0';    C_FLAG_SET   <= '0';  C_FLAG_CLR <= '0';  SHAD_C_LD <= '0';   				
             Z_FLAG_SEL    <= "00";  Z_FLAG_LD   <= '0';    Z_FLAG_SET   <= '0';  Z_FLAG_CLR <= '0';  SHAD_Z_LD <= '0';   				
-            I_FLAG_SET    <= '0';   I_FLAG_CLR  <= '0'; 
-            WRITE_STROBE  <= '0';   READ_STROBE <= '0';	
+            I_FLAG_SET    <= '0';   I_FLAG_CLR  <= '0';    IO_OE        <= '0';
+            --WRITE_STROBE  <= '0';   READ_STROBE <= '0';	
             		
             
             if    (sig_OPCODE_7 = "0010000") then -- BRN
@@ -130,15 +130,15 @@ begin
                 RF_WR <= '1';
                 RF_OE <= '1';
                 ALU_SEL <= "0111";
-                C_LD <= '1';
-                Z_LD <= '1';
+                C_FLAG_LD <= '1';
+                Z_FLAG_LD <= '1';
             elsif (OPCODE_HI_5  = "10010"  ) then -- EXOR reg-immed
                 RF_WR <= '1';
                 RF_OE <= '1';
                 ALU_SEL <= "0111";
                 REG_IMMED_SEL <= '1';
-                C_LD <= '1';
-                Z_LD <= '1';
+                C_FLAG_LD <= '1';
+                Z_FLAG_LD <= '1';
             elsif (OPCODE_HI_5  = "11001"  ) then -- IN
                 RF_WR <= '1';
                 RF_WR_SEL <= "11";
@@ -152,6 +152,7 @@ begin
                 REG_IMMED_SEL <= '1';
             elsif (OPCODE_HI_5  = "11010"  ) then -- OUT
                 RF_OE <= '1';
+                IO_OE <= '1';
             else	
                 -- repeat the default block here to avoid incompletely specified outputs and hence avoid
                 -- the problem of inadvertently created latches within the synthesized system.						
@@ -162,8 +163,8 @@ begin
                 SCR_WR        <= '0';   SCR_OE     <= '0';    SCR_ADDR_SEL <= "00";       					
                 C_FLAG_SEL    <= "00";  C_FLAG_LD  <= '0';    C_FLAG_SET   <= '0';  C_FLAG_CLR <= '0';  SHAD_C_LD <= '0';   				
                 Z_FLAG_SEL    <= "00";  Z_FLAG_LD  <= '0';    Z_FLAG_SET   <= '0';  Z_FLAG_CLR <= '0';  SHAD_Z_LD <= '0';   				
-                I_FLAG_SET    <= '0';   I_FLAG_CLR <= '0'; 
-                WRITE_STROBE  <= '0';   READ_STROBE <= '0';		
+                I_FLAG_SET    <= '0';   I_FLAG_CLR <= '0';    IO_OE        <= '0';
+                --WRITE_STROBE  <= '0';   READ_STROBE <= '0';		
             
             end if;
         
@@ -179,8 +180,8 @@ begin
             SCR_WR        <= '0';   SCR_OE     <= '0';    SCR_ADDR_SEL <= "00";       					
             C_FLAG_SEL    <= "00";  C_FLAG_LD  <= '0';    C_FLAG_SET   <= '0';  C_FLAG_CLR <= '0';  SHAD_C_LD <= '0';   				
             Z_FLAG_SEL    <= "00";  Z_FLAG_LD  <= '0';    Z_FLAG_SET   <= '0';  Z_FLAG_CLR <= '0';  SHAD_Z_LD <= '0';   				
-            I_FLAG_SET    <= '0';   I_FLAG_CLR <= '0'; 
-            WRITE_STROBE  <= '0';   READ_STROBE <= '0';				 
+            I_FLAG_SET    <= '0';   I_FLAG_CLR <= '0';    IO_OE        <= '0';
+            --WRITE_STROBE  <= '0';   READ_STROBE <= '0';				 
             
         end case;
     end process comb_p;
