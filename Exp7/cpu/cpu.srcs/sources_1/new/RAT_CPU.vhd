@@ -134,7 +134,7 @@ architecture Behavioral of RAT_CPU is
             OUT_FLAG : out  STD_LOGIC);
      end component;
      
-     signal MULTI_BUS : STD_LOGIC_VECTOR (9 downto 0);
+     signal MULTI_BUS : STD_LOGIC_VECTOR (9 downto 0) := "ZZZZZZZZZZ";
      
      -- Program counter signals
      signal PC_MUX_SEL : STD_LOGIC_VECTOR (1 downto 0);
