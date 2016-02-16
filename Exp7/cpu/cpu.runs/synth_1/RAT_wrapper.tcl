@@ -15,9 +15,9 @@ set_property target_language Verilog [current_project]
 set_property vhdl_version vhdl_2k [current_fileset]
 read_vhdl -library xil_defaultlib {
   {C:/Users/joseph/Documents/Cal Poly/Year 2/Winter/CPE 233/Git/counter/counter/counter.srcs/sources_1/new/programCounter.vhd}
+  {C:/Users/joseph/Documents/Cal Poly/Year 2/Winter/CPE 233/Git/Exp7/cpu/cpu.srcs/sources_1/new/ControlUnit.vhd}
   {C:/Users/joseph/Documents/Cal Poly/Year 2/Winter/CPE 233/Git/memory/RegisterFile.vhd}
   {C:/Users/joseph/Documents/Cal Poly/Year 2/Winter/CPE 233/Git/counter/counter/counter.srcs/sources_1/new/counter.vhd}
-  {C:/Users/joseph/Documents/Cal Poly/Year 2/Winter/CPE 233/Git/Exp7/cpu/cpu.srcs/sources_1/new/ControlUnit.vhd}
   {C:/Users/joseph/Documents/Cal Poly/Year 2/Winter/CPE 233/Git/Exp7/cpu/cpu.srcs/sources_1/new/FlagReg.vhd}
   {C:/Users/joseph/Documents/Cal Poly/Year 2/Winter/CPE 233/Git/ALU/ALU.srcs/sources_1/new/ALU.vhd}
   {C:/Users/joseph/Documents/Cal Poly/Year 2/Winter/CPE 233/Git/Exp7/cpu/cpu.srcs/sources_1/new/prog_rom.vhd}

@@ -113,7 +113,7 @@ begin
             
             -- Repeat the default block for all variables here, noting that any output values desired to be different
             -- from init values shown below will be assigned in the following case statements for each opcode.
-            PC_LD         <= '0';   PC_RESET    <= '0';	   PC_OE        <= '0';      PC_INC <= '0';	    PC_INC <= '0';	  			      				
+            PC_LD         <= '0';   PC_MUX_SEL <= "00";    PC_RESET    <= '0';	 PC_OE        <= '0';   PC_INC <= '0';	  			      				
             SP_LD         <= '0';   SP_MUX_SEL  <= "00";   SP_RESET     <= '0';
             RF_WR         <= '0';   RF_WR_SEL   <= "00";   RF_OE        <= '0';  
             REG_IMMED_SEL <= '0';   ALU_SEL     <= "0000";       			
@@ -123,9 +123,24 @@ begin
             I_FLAG_SET    <= '0';   I_FLAG_CLR  <= '0';    IO_OE        <= '0';
             --WRITE_STROBE  <= '0';   READ_STROBE <= '0';	
             		
-            
-            if    (sig_OPCODE_7 = "0010000") then -- BRN
+            if    (sig_OPCODE_7 = "0000100") then -- ADD reg-reg
+            elsif (OPCODE_HI_5  = "10100"  ) then -- ADD reg-immed
+            elsif (sig_OPCODE_7 = "0000101") then -- ADDC reg-reg
+            elsif (OPCODE_HI_5  = "10101"  ) then -- ADDC reg-immed
+            elsif (sig_OPCODE_7 = "0000000") then -- AND reg-reg
+            elsif (OPCODE_HI_5  = "1000"   ) then -- AND reg-immed
+            elsif (sig_OPCODE_7 = "0100100") then -- ASR reg-reg
+            elsif (sig_OPCODE_7 = "0010101") then -- BRCC
+            elsif (sig_OPCODE_7 = "0010100") then -- BRCS
+            elsif (sig_OPCODE_7 = "0010010") then -- BREQ
+            elsif (sig_OPCODE_7 = "0010000") then -- BRN
                 PC_LD <= '1';
+            elsif (sig_OPCODE_7 = "0010011") then -- BRNE
+            elsif (sig_OPCODE_7 = "0010001") then -- CALL
+            elsif (sig_OPCODE_7 = "0110000") then -- CLC
+            elsif (sig_OPCODE_7 = "0110101") then -- CLI
+            elsif (sig_OPCODE_7 = "0001000") then -- CMP reg-reg
+            elsif (OPCODE_HI_5  = "11000"  ) then -- CMP reg-immed
             elsif (sig_OPCODE_7 = "0000010") then -- EXOR reg-reg
                 RF_WR <= '1';
                 RF_OE <= '1';
@@ -142,6 +157,10 @@ begin
             elsif (OPCODE_HI_5  = "11001"  ) then -- IN
                 RF_WR <= '1';
                 RF_WR_SEL <= "11";
+            elsif (sig_OPCODE_7 = "0001010") then -- LD reg-reg
+            elsif (OPCODE_HI_5  = "11100"  ) then -- LD reg-immed
+            elsif (sig_OPCODE_7 = "0100000") then -- LSL
+            elsif (sig_OPCODE_7 = "0100001") then -- LSR
             elsif (sig_OPCODE_7 = "0001001") then -- MOV reg-reg
                 RF_WR <= '1';
                 RF_OE <= '0';
@@ -150,13 +169,33 @@ begin
                 RF_WR <= '1';
                 ALU_SEL <= "1110";
                 REG_IMMED_SEL <= '1';
+            elsif (sig_OPCODE_7 = "0000001") then -- OR reg-reg
+            elsif (OPCODE_HI_5  = "10001"  ) then -- OR reg-immed
             elsif (OPCODE_HI_5  = "11010"  ) then -- OUT
                 RF_OE <= '1';
                 IO_OE <= '1';
+            elsif (sig_OPCODE_7 = "0100110") then -- POP
+            elsif (sig_OPCODE_7 = "0100101") then -- PUSH
+            elsif (sig_OPCODE_7 = "0110010") then -- RET
+            elsif (sig_OPCODE_7 = "0110110") then -- RETID
+            elsif (sig_OPCODE_7 = "0110111") then -- RETIE
+            elsif (sig_OPCODE_7 = "0100010") then -- ROL
+            elsif (sig_OPCODE_7 = "0100011") then -- ROR
+            elsif (sig_OPCODE_7 = "0110001") then -- SEC
+            elsif (sig_OPCODE_7 = "0110100") then -- SEI
+            elsif (sig_OPCODE_7 = "0001011") then -- ST reg-reg
+            elsif (OPCODE_HI_5  = "11101"  ) then -- ST reg-immed
+            elsif (sig_OPCODE_7 = "0000110") then -- SUB reg-reg
+            elsif (OPCODE_HI_5  = "10110"  ) then -- SUB reg-immed
+            elsif (sig_OPCODE_7 = "0000111") then -- SUBC reg-reg
+            elsif (OPCODE_HI_5  = "10111"  ) then -- SUBC reg-immed
+            elsif (sig_OPCODE_7 = "0000011") then -- TEST reg-reg
+            elsif (OPCODE_HI_5  = "10011"  ) then -- TEST reg-immed
+            elsif (sig_OPCODE_7 = "0101000") then -- WSP                
             else	
                 -- repeat the default block here to avoid incompletely specified outputs and hence avoid
                 -- the problem of inadvertently created latches within the synthesized system.						
-                PC_LD         <= '0';   PC_MUX_SEL <= "00";   PC_RESET <= '0';	  PC_OE        <= '0';    PC_INC <= '0';			      				
+                PC_LD         <= '0';   PC_MUX_SEL <= "00";   PC_RESET <= '0';	  PC_OE        <= '0';   PC_INC <= '0';			      				
                 SP_LD         <= '0';   SP_MUX_SEL <= "00";   SP_RESET <= '0';
                 RF_WR         <= '0';   RF_WR_SEL  <= "00";   RF_OE    <= '0';  
                 REG_IMMED_SEL <= '0';   ALU_SEL    <= "0000";       			
@@ -164,8 +203,7 @@ begin
                 C_FLAG_SEL    <= "00";  C_FLAG_LD  <= '0';    C_FLAG_SET   <= '0';  C_FLAG_CLR <= '0';  SHAD_C_LD <= '0';   				
                 Z_FLAG_SEL    <= "00";  Z_FLAG_LD  <= '0';    Z_FLAG_SET   <= '0';  Z_FLAG_CLR <= '0';  SHAD_Z_LD <= '0';   				
                 I_FLAG_SET    <= '0';   I_FLAG_CLR <= '0';    IO_OE        <= '0';
-                --WRITE_STROBE  <= '0';   READ_STROBE <= '0';		
-            
+                --WRITE_STROBE  <= '0';   READ_STROBE <= '0';		            
             end if;
         
         when others => 
@@ -173,7 +211,7 @@ begin
             
             -- repeat the default block here to avoid incompletely specified outputs and hence avoid
             -- the problem of inadvertently created latches within the synthesized system.
-            PC_LD         <= '0';   PC_MUX_SEL <= "00";   PC_RESET <= '0';	  PC_OE        <= '0';   PC_INC <= '0';		      				
+            PC_LD         <= '0';   PC_MUX_SEL <= "00";   PC_RESET <= '0';	  PC_OE        <= '0';  PC_INC <= '0';		      				
             SP_LD         <= '0';   SP_MUX_SEL <= "00";   SP_RESET <= '0';
             RF_WR         <= '0';   RF_WR_SEL  <= "00";   RF_OE    <= '0';  
             REG_IMMED_SEL <= '0';   ALU_SEL    <= "0000";       			

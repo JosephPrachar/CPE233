@@ -24,10 +24,10 @@ architecture Stack of StackPointer is
 begin
    
    -- Filter which input will be used
-   D_IN <=      D_IN_BUS when (SEL = "00")
+   D_IN <= D_IN_BUS when (SEL = "00")
            else D_IN_DEC when (SEL = "10")
-	   else D_IN_INC when (SEL = "11")
-	   else open;
+           else SP + 1 when (SEL = "11")
+	       else (others => 'Z');
    
    -- Reset if needed
    SP <= (others => '0') when (RST = '1');
