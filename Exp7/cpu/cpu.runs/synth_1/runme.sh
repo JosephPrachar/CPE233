@@ -24,7 +24,7 @@ else
 fi
 export LD_LIBRARY_PATH
 
-HD_PWD=C:/Users/joseph/Documents/Cal Poly/Year 2/Winter/CPE 233/Git/Exp7/cpu/cpu.runs/synth_1
+HD_PWD=C:/Users/14bmkelley/Desktop/cpe233/Exp7/cpu/cpu.runs/synth_1
 cd "$HD_PWD"
 
 HD_LOG=runme.log
@@ -40,4 +40,4 @@ EAStep()
      fi
 }
 
-EAStep vivado -log RAT_wrapper.vds -m64 -mode batch -messageDb vivado.pb -notrace -source RAT_wrapper.tcl
+EAStep vivado -log StackPointer.vds -m64 -mode batch -messageDb vivado.pb -notrace -source StackPointer.tcl

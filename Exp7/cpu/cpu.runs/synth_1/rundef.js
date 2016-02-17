@@ -23,7 +23,7 @@ eval( EAInclude(ISEJScriptLib) );
 
 
 ISEStep( "vivado",
-         "-log RAT_wrapper.vds -m64 -mode batch -messageDb vivado.pb -notrace -source RAT_wrapper.tcl" );
+         "-log StackPointer.vds -m64 -mode batch -messageDb vivado.pb -notrace -source StackPointer.tcl" );
 
 
 
