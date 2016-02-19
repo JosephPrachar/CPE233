@@ -1,5 +1,0 @@
-Vivado Simulator 2015.3
-Time resolution is 1 ps
-Failure: error with data X at t= 401000 ps
-Time: 401 ns  Iteration: 0  Process: /ScratchPad_TB/test  File: C:/Users/joseph/Documents/Cal Poly/Year 2/Winter/CPE 233/memory/memory.srcs/sim_1/new/ScratchPad_TB.vhd
-$finish called at time : 401 ns : File "C:/Users/joseph/Documents/Cal Poly/Year 2/Winter/CPE 233/memory/memory.srcs/sim_1/new/ScratchPad_TB.vhd" Line 108

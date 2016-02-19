@@ -1,4 +1,0 @@
-# compile vhdl design source files
-vhdl xil_defaultlib  "../../../counter.srcs/sources_1/new/programCounter.vhd"
-vhdl xil_defaultlib  "../../../counter.srcs/sources_1/new/counter.vhd"
-vhdl xil_defaultlib  "../../../counter.srcs/sim_1/new/counter_test.vhd"
