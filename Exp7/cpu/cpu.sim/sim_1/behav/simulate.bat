@@ -1,6 +1,6 @@
 @echo off
 set xv_path=C:\\Xilinx\\Vivado\\2015.3\\bin
-call %xv_path%/xsim StackPointerTB_behav -key {Behavioral:sim_1:Functional:StackPointerTB} -tclbatch StackPointerTB.tcl -log simulate.log
+call %xv_path%/xsim cpu_TB_behav -key {Behavioral:sim_1:Functional:cpu_TB} -tclbatch cpu_TB.tcl -log simulate.log
 if "%errorlevel%"=="0" goto SUCCESS
 if "%errorlevel%"=="1" goto END
 :END

@@ -44,7 +44,14 @@ architecture Behavioral of RAT_wrapper is
    -- In future labs you can add more port IDs
    CONSTANT LEDS_ID       : STD_LOGIC_VECTOR (7 downto 0) := X"40";
    -------------------------------------------------------------------------------
-
+   
+   component clk_div_fs is
+      port (
+         CLK   : in  std_logic;
+         SCLK, FCLK : out std_logic
+      );
+   end component;
+   
    -- Declare RAT_CPU ------------------------------------------------------------
    component RAT_CPU 
        Port ( IN_PORT  : in  STD_LOGIC_VECTOR (7 downto 0);
@@ -56,7 +63,7 @@ architecture Behavioral of RAT_wrapper is
               CLK      : in  STD_LOGIC);
    end component RAT_CPU;
    -------------------------------------------------------------------------------
-
+   
    -- Signals for connecting RAT_CPU to RAT_wrapper -------------------------------
    signal s_input_port  : std_logic_vector (7 downto 0);
    signal s_output_port : std_logic_vector (7 downto 0);
@@ -67,8 +74,13 @@ architecture Behavioral of RAT_wrapper is
    -- Register definitions for output devices ------------------------------------
    signal r_LEDS        : std_logic_vector (7 downto 0); 
    -------------------------------------------------------------------------------
+   
+   signal F_CLK, S_CLK : std_logic;
 
 begin
+
+   -- clk divider
+   CLK_DIV : clk_div_fs port map (CLK, S_CLK, F_CLK);
 
    -- Instantiate RAT_CPU --------------------------------------------------------
    CPU: RAT_CPU
@@ -78,7 +90,7 @@ begin
               RST      => RST,  
               IO_OE    => s_load,
               INT_IN   => '0',
-              CLK      => CLK);         
+              CLK      => S_CLK);
    -------------------------------------------------------------------------------
 
 
@@ -100,9 +112,9 @@ begin
    -- MUX for updating output registers ------------------------------------------
    -- Register updates depend on rising clock edge and asserted load signal
    -------------------------------------------------------------------------------
-   outputs: process(CLK) 
+   outputs: process(S_CLK) 
    begin   
-      if (rising_edge(CLK)) then
+      if (rising_edge(S_CLK)) then
          if (s_load = '1') then 
            
             -- the register definition for the LEDS

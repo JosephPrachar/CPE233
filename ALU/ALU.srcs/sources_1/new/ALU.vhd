@@ -73,5 +73,5 @@ begin
            else temp_s(7 downto 0);
     
     Z_FLAG <= '1' when (temp_s = "000000000" or temp_s = "100000000") else '0';
-    C_FLAG <= temp_s(8); 
+    C_FLAG <= temp_s(8);
 end Behavioral;
