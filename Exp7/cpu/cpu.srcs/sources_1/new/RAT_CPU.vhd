@@ -134,6 +134,25 @@ architecture Behavioral of RAT_CPU is
             OUT_FLAG : out  STD_LOGIC);
      end component;
      
+     component ScratchPad
+        Port ( Scr_Addr : in STD_LOGIC_VECTOR (7 downto 0);
+                Scr_Oe   : in STD_LOGIC;
+                SCR_WE   : in STD_LOGIC;
+                CLK      : in STD_LOGIC;
+                SCR_DATA : inout STD_LOGIC_VECTOR (9 downto 0));
+     end component;
+     
+     component StackPointer
+        Port (
+            D_IN_BUS  : in  STD_LOGIC_VECTOR (7 downto 0);
+            SEL       : in  STD_LOGIC_VECTOR (1 downto 0);
+            LD        : in  STD_LOGIC;
+            RST       : in  STD_LOGIC;
+            CLK       : in  STD_LOGIC;
+            D_OUT     : out STD_LOGIC_VECTOR (7 downto 0);
+            D_OUT_DEC : out STD_LOGIC_VECTOR (7 downto 0));
+     end component;
+     
      signal MULTI_BUS : STD_LOGIC_VECTOR (9 downto 0) := "ZZZZZZZZZZ";
      
      -- Program counter signals
@@ -163,6 +182,15 @@ architecture Behavioral of RAT_CPU is
      -- Z Flag signals
      signal Z_FLAG, Z_LD : STD_LOGIC;
      
+     -- StackPointer signals
+     signal STACK_POINTER, STACK_POINTER_DEC : STD_LOGIC_VECTOR (7 downto 0);
+     signal SP_RST, SP_LD : STD_LOGIC;
+     signal SP_MUX_SEL : STD_LOGIC_VECTOR (1 downto 0);
+     
+     -- Scratchpad signals
+     signal SCR_ADDR : STD_LOGIC_VECTOR (7 downto 0);
+     signal SCR_WR, SCR_OE : STD_LOGIC;
+     
 begin
     control : controlUnit PORT MAP (CLK, C_FLAG, Z_FLAG, INT_IN, RST, Instruction (17 downto 13), Instruction (1 downto 0), 
         PC_LD, PC_INC, PC_RST, PC_OE, PC_MUX_SEL, 
@@ -189,6 +217,9 @@ begin
     aluMod : alu PORT MAP (RF_OUT_X, ALU_IN_B, C_FLAG, ALU_SEL, ALU_OUT, ALU_OUT_C, ALU_OUT_Z);
     cFlag : FlagReg PORT MAP (ALU_OUT_C, C_LD, C_SET, C_CLR, CLK, C_FLAG);
     zFlag : FlagReg PORT MAP (ALU_OUT_Z, Z_LD, '0', '0', CLK, Z_FLAG);
+    
+    sp : StackPointer PORT MAP (MULTI_BUS, SP_MUX_SEL, SP_LD, SP_RST, CLK, STACK_POINTER, STACK_POINTER_DEC);
+    scratch : Scratchpad PORT MAP (    
     
     PORT_ID <= Instruction (7 downto 0);
     OUT_PORT <= MULTI_BUS (7 downto 0);
