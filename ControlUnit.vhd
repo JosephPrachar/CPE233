@@ -134,6 +134,11 @@ begin
                 Z_FLAG_LD <= '1';
             elsif (OPCODE_HI_5  = "1000"   ) then -- AND reg-immed
             elsif (sig_OPCODE_7 = "0100100") then -- ASR reg-reg
+                RF_WR <= '1';
+                RF_OE <= '1';
+                ALU_SEL <= "1101";
+                Z_FLAG_LD <= '1';
+                C_FLAG_LD <= '1';
             elsif (sig_OPCODE_7 = "0010101") then -- BRCC
             elsif (sig_OPCODE_7 = "0010100") then -- BRCS
             elsif (sig_OPCODE_7 = "0010010") then -- BREQ
@@ -150,6 +155,7 @@ begin
                 PC_LD <= '1';
                 PC_OE <= '1';
                 SP_LD <= '1';
+                SP_MUX_SEL <= "10";
                 SCR_ADDR_SEL <= "11";
                 SCR_WR <= '1';
             elsif (sig_OPCODE_7 = "0110000") then -- CLC
@@ -229,7 +235,17 @@ begin
             elsif (sig_OPCODE_7 = "0110110") then -- RETID
             elsif (sig_OPCODE_7 = "0110111") then -- RETIE
             elsif (sig_OPCODE_7 = "0100010") then -- ROL
+                RF_WR <= '1';
+                RF_OE <= '1';
+                ALU_SEL <= "1011";
+                Z_FLAG_LD <= '1';
+                C_FLAG_LD <= '1';
             elsif (sig_OPCODE_7 = "0100011") then -- ROR
+                RF_WR <= '1';
+                RF_OE <= '1';
+                ALU_SEL <= "1100";
+                Z_FLAG_LD <= '1';
+                C_FLAG_LD <= '1';
             elsif (sig_OPCODE_7 = "0110001") then -- SEC
                 C_FLAG_SET <= '1';
             elsif (sig_OPCODE_7 = "0110100") then -- SEI

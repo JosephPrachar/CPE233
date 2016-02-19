@@ -206,7 +206,7 @@ begin
         open, Z_LD, open, open, open, 
         open, open, IO_OE);
 
-    pc : counter PORT MAP (Instruction (12 downto 3), MULTI_BUS (9 downto 0), Instruction (12 downto 3), PC_MUX_SEL, PC_OE, PC_LD, PC_INC, PC_RST, CLK, PC_COUNT, open);
+    pc : counter PORT MAP (Instruction (12 downto 3), MULTI_BUS (9 downto 0), Instruction (12 downto 3), PC_MUX_SEL, PC_OE, PC_LD, PC_INC, PC_RST, CLK, PC_COUNT, MULTI_BUS);
     progRom : prog_rom PORT MAP (PC_COUNT, Instruction, CLK);
     
     RF_DATA_IN <= ALU_OUT                when RF_WR_SEL = "00"

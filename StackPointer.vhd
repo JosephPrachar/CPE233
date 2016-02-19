@@ -16,9 +16,7 @@ end StackPointer;
 
 architecture Stack of StackPointer is
    
-   signal SP : STD_LOGIC_VECTOR (7 downto 0);
-   signal SP_LD : STD_LOGIC_VECTOR (7 downto 0);
-   signal SP_RST : STD_LOGIC_VECTOR (7 downto 0);
+   signal SP : STD_LOGIC_VECTOR (7 downto 0) := x"00";
 
 begin
    
@@ -27,20 +25,18 @@ begin
       if (rising_edge(CLK)) then
          if (LD = '1') then
             if (SEL = "00") then
-               SP_LD <= D_IN_BUS;
+               SP <= D_IN_BUS;
             elsif (SEL = "10") then
-               SP_LD <= SP - 1;
+               SP <= SP - 1;
             elsif (SEL = "11") then
-               SP_LD <= SP + 1;
+               SP <= SP + 1;
             end if;
 	     end if;
 	  end if;
       if (RST = '1') then
-         SP_LD <= (others => '0');
+         SP <= (others => '0');
       end if;
    end process LOAD;
-   
-   SP <= SP_LD;
    
    -- Output resulting stack pointers
    D_OUT     <= SP;
