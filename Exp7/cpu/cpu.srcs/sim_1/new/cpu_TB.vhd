@@ -52,9 +52,9 @@ begin
     process
     begin 
         CLK <= '0';
-        wait for 10ns;
+        wait for 20ns;
         CLK <= '1';
-        wait for 10ns;
+        wait for 20ns;
     end process;
 
     process

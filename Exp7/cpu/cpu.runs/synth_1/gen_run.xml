@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <GenRun Id="synth_1" LaunchPart="xc7a35tcpg236-1" LaunchTime="1455738523">
-  <File Type="RDS-DCP" Name="StackPointer.dcp"/>
   <File Type="RUN-CONSTRS" Name="$PDATADIR/runs/synth_1/constrs_in.xml"/>
-  <File Type="RDS-UTIL-PB" Name="StackPointer_utilization_synth.pb"/>
+  <File Type="RDS-DCP" Name="StackPointer.dcp"/>
   <File Type="RUN-SRCS" Name="$PDATADIR/runs/synth_1/sources.xml"/>
-  <File Type="RDS-PROPCONSTRS" Name="StackPointer_drc_synth.rpt"/>
-  <File Type="PA-TCL" Name="StackPointer.tcl"/>
+  <File Type="RDS-UTIL-PB" Name="StackPointer_utilization_synth.pb"/>
   <File Type="RUN-STRAT" Name="$PDATADIR/runs/synth_1/synth_1.psg"/>
+  <File Type="PA-TCL" Name="StackPointer.tcl"/>
+  <File Type="RDS-PROPCONSTRS" Name="StackPointer_drc_synth.rpt"/>
   <File Type="RDS-RDS" Name="StackPointer.vds"/>
   <File Type="RDS-UTIL" Name="StackPointer_utilization_synth.rpt"/>
   <File Type="VDS-TIMINGSUMMARY" Name="StackPointer_timing_summary_synth.rpt"/>

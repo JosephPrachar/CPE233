@@ -134,6 +134,28 @@ architecture Behavioral of RAT_CPU is
             OUT_FLAG : out  STD_LOGIC);
      end component;
      
+     component StackPointer is
+        port (
+            D_IN_BUS  : in  STD_LOGIC_VECTOR (7 downto 0);
+            SEL       : in  STD_LOGIC_VECTOR (1 downto 0);
+            LD        : in  STD_LOGIC;
+            RST       : in  STD_LOGIC;
+            CLK       : in  STD_LOGIC;
+            D_OUT     : out STD_LOGIC_VECTOR (7 downto 0);
+            D_OUT_DEC : out STD_LOGIC_VECTOR (7 downto 0)
+        );
+     end component;
+     
+     component scratchPad is
+        port (
+            Scr_Addr : in STD_LOGIC_VECTOR (7 downto 0);
+            Scr_Oe   : in STD_LOGIC;
+            SCR_WE   : in STD_LOGIC;
+            CLK      : in STD_LOGIC;
+            SCR_DATA : inout STD_LOGIC_VECTOR (9 downto 0)
+        );
+     end component;
+     
      signal MULTI_BUS : STD_LOGIC_VECTOR (9 downto 0) := "ZZZZZZZZZZ";
      
      -- Program counter signals
@@ -163,18 +185,28 @@ architecture Behavioral of RAT_CPU is
      -- Z Flag signals
      signal Z_FLAG, Z_LD : STD_LOGIC;
      
+     -- Stack signals
+     signal SP_MUX_SEL : STD_LOGIC_VECTOR (1 downto 0);
+     signal SP_LD, SP_RST : STD_LOGIC;
+     signal SP, SP_DEC : STD_LOGIC_VECTOR (7 downto 0);
+     
+     -- ScratchPad signals
+     signal SCR_WR, SCR_OE : STD_LOGIC;
+     signal SCR_ADDR_SEL : STD_LOGIC_VECTOR (1 downto 0);
+     signal SCR_ADDR : STD_LOGIC_VECTOR (7 downto 0);
+     
 begin
     control : controlUnit PORT MAP (CLK, C_FLAG, Z_FLAG, INT_IN, RST, Instruction (17 downto 13), Instruction (1 downto 0), 
         PC_LD, PC_INC, PC_RST, PC_OE, PC_MUX_SEL, 
-        open, open, open, 
+        SP_LD, SP_MUX_SEL, SP_RST, 
         RF_WE, RF_WR_SEL, RF_OE, REG_IMMED_SEL, 
         ALU_SEL, 
-        open, open, open, 
+        SCR_WR, SCR_OE, SCR_ADDR_SEL, 
         open, C_LD, C_SET, C_CLR, open, 
         open, Z_LD, open, open, open, 
         open, open, IO_OE);
 
-    pc : counter PORT MAP (Instruction (12 downto 3), Instruction (12 downto 3), Instruction (12 downto 3), PC_MUX_SEL, PC_OE, PC_LD, PC_INC, PC_RST, CLK, PC_COUNT, open);
+    pc : counter PORT MAP (Instruction (12 downto 3), MULTI_BUS (9 downto 0), Instruction (12 downto 3), PC_MUX_SEL, PC_OE, PC_LD, PC_INC, PC_RST, CLK, PC_COUNT, open);
     progRom : prog_rom PORT MAP (PC_COUNT, Instruction, CLK);
     
     RF_DATA_IN <= ALU_OUT                when RF_WR_SEL = "00"
@@ -189,6 +221,15 @@ begin
     aluMod : alu PORT MAP (RF_OUT_X, ALU_IN_B, C_FLAG, ALU_SEL, ALU_OUT, ALU_OUT_C, ALU_OUT_Z);
     cFlag : FlagReg PORT MAP (ALU_OUT_C, C_LD, C_SET, C_CLR, CLK, C_FLAG);
     zFlag : FlagReg PORT MAP (ALU_OUT_Z, Z_LD, '0', '0', CLK, Z_FLAG);
+    
+    stack : StackPointer port map (MULTI_BUS (7 downto 0), SP_MUX_SEL, SP_LD, SP_RST, CLK, SP, SP_DEC);
+    
+    SCR_ADDR <= ALU_OUT                  when (SCR_ADDR_SEL = "00")
+           else Instruction (7 downto 0) when (SCR_ADDR_SEL = "01")
+           else SP                       when (SCR_ADDR_SEL = "10")
+           else SP_DEC;
+    
+    scratch : scratchPad port map (SCR_ADDR, SCR_OE, SCR_WR, CLK, MULTI_BUS);
     
     PORT_ID <= Instruction (7 downto 0);
     OUT_PORT <= MULTI_BUS (7 downto 0);
