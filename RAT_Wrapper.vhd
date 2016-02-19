@@ -45,10 +45,10 @@ architecture Behavioral of RAT_wrapper is
    CONSTANT LEDS_ID       : STD_LOGIC_VECTOR (7 downto 0) := X"40";
    -------------------------------------------------------------------------------
    
-   component clk_div_fs is
+   component Clk_Divider is
       port (
          CLK   : in  std_logic;
-         SCLK, FCLK : out std_logic
+         S_CLK : out std_logic
       );
    end component;
    
@@ -75,12 +75,11 @@ architecture Behavioral of RAT_wrapper is
    signal r_LEDS        : std_logic_vector (7 downto 0); 
    -------------------------------------------------------------------------------
    
-   signal F_CLK, S_CLK : std_logic;
+   signal S_CLK : std_logic;
 
 begin
 
-   -- clk divider
-   CLK_DIV : clk_div_fs port map (CLK, S_CLK, F_CLK);
+   CLK_DIV : Clk_Divider port map (CLK, S_CLK);
 
    -- Instantiate RAT_CPU --------------------------------------------------------
    CPU: RAT_CPU
