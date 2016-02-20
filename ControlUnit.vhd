@@ -154,7 +154,7 @@ begin
                 RF_OE <= '1';
                 ALU_SEL <= "0101";
                 Z_FLAG_LD <= '1';
-            elsif (OPCODE_HI_5  = "1000"   ) then -- AND reg-immed
+            elsif (OPCODE_HI_5  = "10000"  ) then -- AND reg-immed
                 REG_IMMED_SEL <= '1';
                 RF_WR <= '1';
                 RF_OE <= '1';
@@ -192,7 +192,9 @@ begin
                 SCR_ADDR_SEL <= "11";
                 SCR_WR <= '1';
             elsif (sig_OPCODE_7 = "0110000") then -- CLC
-            elsif (sig_OPCODE_7 = "0110101") then -- CLI
+                C_FLAG_CLR <= '1';
+            elsif (sig_OPCODE_7 = "0110101") then -- CLI (INT)
+                I_FLAG_CLR <= '1';
             elsif (sig_OPCODE_7 = "0001000") then -- CMP reg-reg
                 RF_OE <= '1';
                 ALU_SEL <= "0100";
@@ -221,7 +223,15 @@ begin
                 RF_WR <= '1';
                 RF_WR_SEL <= "11";
             elsif (sig_OPCODE_7 = "0001010") then -- LD reg-reg
+                SCR_OE <= '1';
+                SCR_ADDR_SEL <= "00";
+                RF_WR <= '1';
+                RF_WR_SEL <= "01";                
             elsif (OPCODE_HI_5  = "11100"  ) then -- LD reg-immed
+                SCR_OE <= '1';
+                SCR_ADDR_SEL <= "01";
+                RF_WR <= '1';
+                RF_WR_SEL <= "01";
             elsif (sig_OPCODE_7 = "0100000") then -- LSL
                 RF_WR <= '1';
                 RF_OE <= '1';
@@ -257,7 +267,18 @@ begin
                 RF_OE <= '1';
                 IO_OE <= '1';
             elsif (sig_OPCODE_7 = "0100110") then -- POP
+                SCR_ADDR_SEL <= "10";
+                SCR_OE <= '1';
+                RF_WR <= '1';
+                RF_WR_SEL <= "01";
+                SP_MUX_SEL <= "11";
+                SP_LD <= '1';
             elsif (sig_OPCODE_7 = "0100101") then -- PUSH
+                RF_OE <= '1';
+                SCR_WR <= '1';
+                SCR_ADDR_SEL <= "11";
+                SP_MUX_SEL <= "11";
+                SP_LD <= '1';
             elsif (sig_OPCODE_7 = "0110010") then -- RET
                 SCR_ADDR_SEL <= "10";
                 SCR_OE <= '1';
@@ -265,8 +286,8 @@ begin
                 PC_LD <= '1';
                 SP_MUX_SEL <= "11";
                 SP_LD <= '1';
-            elsif (sig_OPCODE_7 = "0110110") then -- RETID
-            elsif (sig_OPCODE_7 = "0110111") then -- RETIE
+            elsif (sig_OPCODE_7 = "0110110") then -- RETID (INT)
+            elsif (sig_OPCODE_7 = "0110111") then -- RETIE (INT)
             elsif (sig_OPCODE_7 = "0100010") then -- ROL
                 RF_WR <= '1';
                 RF_OE <= '1';
@@ -281,9 +302,15 @@ begin
                 C_FLAG_LD <= '1';
             elsif (sig_OPCODE_7 = "0110001") then -- SEC
                 C_FLAG_SET <= '1';
-            elsif (sig_OPCODE_7 = "0110100") then -- SEI
+            elsif (sig_OPCODE_7 = "0110100") then -- SEI (INT)
+                I_FLAG_SET <= '1';
             elsif (sig_OPCODE_7 = "0001011") then -- ST reg-reg
+                RF_OE <= '1';
+                SCR_WR <= '1';
             elsif (OPCODE_HI_5  = "11101"  ) then -- ST reg-immed
+                RF_OE <= '1';
+                SCR_WR <= '1';
+                SCR_ADDR_SEL <= "01";
             elsif (sig_OPCODE_7 = "0000110") then -- SUB reg-reg
                 RF_WR <= '1';
                 RF_OE <= '1';
@@ -319,7 +346,10 @@ begin
                 RF_OE <= '1';
                 ALU_SEL <= "1000";
                 Z_FLAG_LD <= '1';
-            elsif (sig_OPCODE_7 = "0101000") then -- WSP                
+            elsif (sig_OPCODE_7 = "0101000") then -- WSP
+                RF_OE <= '1';
+                SP_MUX_SEL <= "00";
+                SP_LD <= '1';
             else	
                 -- repeat the default block here to avoid incompletely specified outputs and hence avoid
                 -- the problem of inadvertently created latches within the synthesized system.						
