@@ -124,15 +124,42 @@ begin
             --WRITE_STROBE  <= '0';   READ_STROBE <= '0';	
             		
             if    (sig_OPCODE_7 = "0000100") then -- ADD reg-reg
+                RF_WR <= '1';
+                RF_OE <= '1';
+                ALU_SEL <= "0000";
+                C_FLAG_LD <= '1';
+                Z_FLAG_LD <= '1';
             elsif (OPCODE_HI_5  = "10100"  ) then -- ADD reg-immed
+                REG_IMMED_SEL <= '1';
+                RF_WR <= '1';
+                RF_OE <= '1';
+                ALU_SEL <= "0000";
+                C_FLAG_LD <= '1';
+                Z_FLAG_LD <= '1';
             elsif (sig_OPCODE_7 = "0000101") then -- ADDC reg-reg
+                RF_WR <= '1';
+                RF_OE <= '1';
+                ALU_SEL <= "0001";
+                C_FLAG_LD <= '1';
+                Z_FLAG_LD <= '1';
             elsif (OPCODE_HI_5  = "10101"  ) then -- ADDC reg-immed
+                REG_IMMED_SEL <= '1';
+                RF_WR <= '1';
+                RF_OE <= '1';
+                ALU_SEL <= "0001";
+                C_FLAG_LD <= '1';
+                Z_FLAG_LD <= '1';
             elsif (sig_OPCODE_7 = "0000000") then -- AND reg-reg
                 RF_WR <= '1';
                 RF_OE <= '1';
                 ALU_SEL <= "0101";
                 Z_FLAG_LD <= '1';
             elsif (OPCODE_HI_5  = "1000"   ) then -- AND reg-immed
+                REG_IMMED_SEL <= '1';
+                RF_WR <= '1';
+                RF_OE <= '1';
+                ALU_SEL <= "0101";
+                Z_FLAG_LD <= '1';
             elsif (sig_OPCODE_7 = "0100100") then -- ASR reg-reg
                 RF_WR <= '1';
                 RF_OE <= '1';
@@ -140,7 +167,13 @@ begin
                 Z_FLAG_LD <= '1';
                 C_FLAG_LD <= '1';
             elsif (sig_OPCODE_7 = "0010101") then -- BRCC
+                if (c = '0') then
+                    PC_LD <= '1';
+                end if;
             elsif (sig_OPCODE_7 = "0010100") then -- BRCS
+                if (c = '1') then
+                    PC_LD <= '1';
+                end if;
             elsif (sig_OPCODE_7 = "0010010") then -- BREQ
                 if (Z = '1') then
                     PC_LD <= '1';
@@ -252,6 +285,11 @@ begin
             elsif (sig_OPCODE_7 = "0001011") then -- ST reg-reg
             elsif (OPCODE_HI_5  = "11101"  ) then -- ST reg-immed
             elsif (sig_OPCODE_7 = "0000110") then -- SUB reg-reg
+                RF_WR <= '1';
+                RF_OE <= '1';
+                ALU_SEL <= "0010";
+                C_FLAG_LD <= '1';
+                Z_FLAG_LD <= '1';
             elsif (OPCODE_HI_5  = "10110"  ) then -- SUB reg-immed
                 RF_WR <= '1';
                 RF_OE <= '1';
@@ -260,9 +298,27 @@ begin
                 C_FLAG_LD <= '1';
                 Z_FLAG_LD <= '1';
             elsif (sig_OPCODE_7 = "0000111") then -- SUBC reg-reg
+                RF_WR <= '1';
+                RF_OE <= '1';
+                ALU_SEL <= "0011";
+                C_FLAG_LD <= '1';
+                Z_FLAG_LD <= '1';
             elsif (OPCODE_HI_5  = "10111"  ) then -- SUBC reg-immed
+                REG_IMMED_SEL <= '1';
+                RF_WR <= '1';
+                RF_OE <= '1';
+                ALU_SEL <= "0011";
+                C_FLAG_LD <= '1';
+                Z_FLAG_LD <= '1';
             elsif (sig_OPCODE_7 = "0000011") then -- TEST reg-reg
+                RF_OE <= '1';
+                ALU_SEL <= "1000";
+                Z_FLAG_LD <= '1';
             elsif (OPCODE_HI_5  = "10011"  ) then -- TEST reg-immed
+                REG_IMMED_SEL <= '1';
+                RF_OE <= '1';
+                ALU_SEL <= "1000";
+                Z_FLAG_LD <= '1';
             elsif (sig_OPCODE_7 = "0101000") then -- WSP                
             else	
                 -- repeat the default block here to avoid incompletely specified outputs and hence avoid
