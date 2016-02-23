@@ -4,3 +4,7 @@
 This repository represents the labs that were assigned to Joseph and Brandon
 during CPE 233. All of the code contained here is under the GNU Public
 license. Check out our progress on developing the RAT CPU architecture!
+
+Layout:
+Vivado project in "cpu" folder
+All vhdl sources are in top folder for easier source control

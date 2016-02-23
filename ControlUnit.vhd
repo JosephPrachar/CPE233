@@ -277,7 +277,7 @@ begin
                 RF_OE <= '1';
                 SCR_WR <= '1';
                 SCR_ADDR_SEL <= "11";
-                SP_MUX_SEL <= "11";
+                SP_MUX_SEL <= "10";
                 SP_LD <= '1';
             elsif (sig_OPCODE_7 = "0110010") then -- RET
                 SCR_ADDR_SEL <= "10";

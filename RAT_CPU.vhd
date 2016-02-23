@@ -224,7 +224,7 @@ begin
     
     stack : StackPointer port map (MULTI_BUS (7 downto 0), SP_MUX_SEL, SP_LD, SP_RST, CLK, SP, SP_DEC);
     
-    SCR_ADDR <= ALU_OUT                  when (SCR_ADDR_SEL = "00")
+    SCR_ADDR <= RF_OUT_Y                 when (SCR_ADDR_SEL = "00")
            else Instruction (7 downto 0) when (SCR_ADDR_SEL = "01")
            else SP                       when (SCR_ADDR_SEL = "10")
            else SP_DEC;
