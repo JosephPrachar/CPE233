@@ -40,12 +40,12 @@ entity ControlUnit is
         SCR_WR        : out  STD_LOGIC;
         SCR_OE        : out  STD_LOGIC;
         SCR_ADDR_SEL  : out  STD_LOGIC_VECTOR (1 downto 0);
-        C_FLAG_SEL    : out  STD_LOGIC_VECTOR (1 downto 0);
+        C_FLAG_SEL    : out  STD_LOGIC;
         C_FLAG_LD     : out  STD_LOGIC;
         C_FLAG_SET    : out  STD_LOGIC;
         C_FLAG_CLR    : out  STD_LOGIC;
         SHAD_C_LD     : out  STD_LOGIC;
-        Z_FLAG_SEL    : out  STD_LOGIC_VECTOR (1 downto 0);
+        Z_FLAG_SEL    : out  STD_LOGIC;
         Z_FLAG_LD     : out  STD_LOGIC;
         Z_FLAG_SET    : out  STD_LOGIC;
         Z_FLAG_CLR    : out  STD_LOGIC;
@@ -56,15 +56,17 @@ entity ControlUnit is
     end ControlUnit;
 
 architecture Behavioral of ControlUnit is    
-    type state_type is (ST_init, ST_fet, ST_exec);
+    
+    -- State machine signals
+    type state_type is (ST_init, ST_fet, ST_exec, ST_int);
     signal PS,NS : state_type;
     
+    -- Opcode
     signal sig_OPCODE_7: std_logic_vector (6 downto 0);
-begin
-    -- concatenate the all opcodes into a 7-bit complete opcode for
-    -- easy instruction decoding.
-    sig_OPCODE_7 <= OPCODE_HI_5 & OPCODE_LO_2;
     
+begin
+
+    -- Assign next state
     sync_p: process (CLK, NS, RST)
     begin
         if (RST = '1') then
@@ -74,9 +76,11 @@ begin
         end if;
     end process sync_p;
     
-    
-    comb_p: process (sig_OPCODE_7, PS, NS)
-    begin
+    -- Translate instruction to signals
+    comb_p: process (OPCODE_HI_5, OPCODE_LO_2, sig_OPCODE_7, C, Z, PS, NS, INT) begin
+        
+        sig_OPCODE_7 <= OPCODE_HI_5 & OPCODE_LO_2;
+        
         case PS is
         -- STATE: the init cycle ------------------------------------
         when ST_init =>               
@@ -88,8 +92,8 @@ begin
             RF_WR         <= '0';   RF_WR_SEL  <= "00";   RF_OE    <= '0';  
             REG_IMMED_SEL <= '0';   ALU_SEL    <= "0000";       			
             SCR_WR        <= '0';   SCR_OE     <= '0';    SCR_ADDR_SEL <= "00";       					
-            C_FLAG_SEL    <= "00";  C_FLAG_LD  <= '0';    C_FLAG_SET   <= '0';  C_FLAG_CLR <= '0';  SHAD_C_LD <= '0';   				
-            Z_FLAG_SEL    <= "00";  Z_FLAG_LD  <= '0';    Z_FLAG_SET   <= '0';  Z_FLAG_CLR <= '0';  SHAD_Z_LD <= '0';   				
+            C_FLAG_SEL    <= '0';   C_FLAG_LD  <= '0';    C_FLAG_SET   <= '0';  C_FLAG_CLR <= '0';  SHAD_C_LD <= '0';   				
+            Z_FLAG_SEL    <= '0';   Z_FLAG_LD  <= '0';    Z_FLAG_SET   <= '0';  Z_FLAG_CLR <= '0';  SHAD_Z_LD <= '0';   				
             I_FLAG_SET    <= '0';   I_FLAG_CLR <= '0';    IO_OE        <= '0';
             --WRITE_STROBE  <= '0';   READ_STROBE <= '0';		 	
         
@@ -102,14 +106,18 @@ begin
             RF_WR         <= '0';   RF_WR_SEL  <= "00";   RF_OE    <= '0';  
             REG_IMMED_SEL <= '0';   ALU_SEL    <= "0000";       			
             SCR_WR        <= '0';   SCR_OE     <= '0';    SCR_ADDR_SEL <= "00";       					
-            C_FLAG_SEL    <= "00";  C_FLAG_LD  <= '0';    C_FLAG_SET   <= '0';  C_FLAG_CLR <= '0';  SHAD_C_LD <= '0';   				
-            Z_FLAG_SEL    <= "00";  Z_FLAG_LD  <= '0';    Z_FLAG_SET   <= '0';  Z_FLAG_CLR <= '0';  SHAD_Z_LD <= '0';   				
+            C_FLAG_SEL    <= '0';   C_FLAG_LD  <= '0';    C_FLAG_SET   <= '0';  C_FLAG_CLR <= '0';  SHAD_C_LD <= '0';   				
+            Z_FLAG_SEL    <= '0';   Z_FLAG_LD  <= '0';    Z_FLAG_SET   <= '0';  Z_FLAG_CLR <= '0';  SHAD_Z_LD <= '0';   				
             I_FLAG_SET    <= '0';   I_FLAG_CLR <= '0';    IO_OE        <= '0';
             --WRITE_STROBE  <= '0';   READ_STROBE <= '0';					
             
         -- STATE: the execute cycle ---------------------------------
         when ST_exec =>
-            NS <= ST_fet;
+            if (INT = '1') then
+                NS <= ST_int;
+            else
+                NS <= ST_fet;
+            end if;
             
             -- Repeat the default block for all variables here, noting that any output values desired to be different
             -- from init values shown below will be assigned in the following case statements for each opcode.
@@ -118,8 +126,8 @@ begin
             RF_WR         <= '0';   RF_WR_SEL   <= "00";   RF_OE        <= '0';  
             REG_IMMED_SEL <= '0';   ALU_SEL     <= "0000";       			
             SCR_WR        <= '0';   SCR_OE      <= '0';    SCR_ADDR_SEL <= "00";       					
-            C_FLAG_SEL    <= "00";  C_FLAG_LD   <= '0';    C_FLAG_SET   <= '0';  C_FLAG_CLR <= '0';  SHAD_C_LD <= '0';   				
-            Z_FLAG_SEL    <= "00";  Z_FLAG_LD   <= '0';    Z_FLAG_SET   <= '0';  Z_FLAG_CLR <= '0';  SHAD_Z_LD <= '0';   				
+            C_FLAG_SEL    <= '0';   C_FLAG_LD   <= '0';    C_FLAG_SET   <= '0';  C_FLAG_CLR <= '0';  SHAD_C_LD <= '0';   				
+            Z_FLAG_SEL    <= '0';   Z_FLAG_LD   <= '0';    Z_FLAG_SET   <= '0';  Z_FLAG_CLR <= '0';  SHAD_Z_LD <= '0';   				
             I_FLAG_SET    <= '0';   I_FLAG_CLR  <= '0';    IO_OE        <= '0';
             --WRITE_STROBE  <= '0';   READ_STROBE <= '0';	
             		
@@ -287,7 +295,21 @@ begin
                 SP_MUX_SEL <= "11";
                 SP_LD <= '1';
             elsif (sig_OPCODE_7 = "0110110") then -- RETID (INT)
+                SCR_ADDR_SEL <= "10";
+                SCR_OE <= '1';
+                PC_MUX_SEL <= "01";
+                PC_LD <= '1';
+                SP_MUX_SEL <= "11";
+                SP_LD <= '1';
+                I_FLAG_CLR <= '1';
             elsif (sig_OPCODE_7 = "0110111") then -- RETIE (INT)
+                SCR_ADDR_SEL <= "10";
+                SCR_OE <= '1';
+                PC_MUX_SEL <= "01";
+                PC_LD <= '1';
+                SP_MUX_SEL <= "11";
+                SP_LD <= '1';
+                I_FLAG_SET <= '1';
             elsif (sig_OPCODE_7 = "0100010") then -- ROL
                 RF_WR <= '1';
                 RF_OE <= '1';
@@ -358,11 +380,25 @@ begin
                 RF_WR         <= '0';   RF_WR_SEL  <= "00";   RF_OE    <= '0';  
                 REG_IMMED_SEL <= '0';   ALU_SEL    <= "0000";       			
                 SCR_WR        <= '0';   SCR_OE     <= '0';    SCR_ADDR_SEL <= "00";       					
-                C_FLAG_SEL    <= "00";  C_FLAG_LD  <= '0';    C_FLAG_SET   <= '0';  C_FLAG_CLR <= '0';  SHAD_C_LD <= '0';   				
-                Z_FLAG_SEL    <= "00";  Z_FLAG_LD  <= '0';    Z_FLAG_SET   <= '0';  Z_FLAG_CLR <= '0';  SHAD_Z_LD <= '0';   				
+                C_FLAG_SEL    <= '0';  C_FLAG_LD  <= '0';    C_FLAG_SET   <= '0';  C_FLAG_CLR <= '0';  SHAD_C_LD <= '0';   				
+                Z_FLAG_SEL    <= '0';  Z_FLAG_LD  <= '0';    Z_FLAG_SET   <= '0';  Z_FLAG_CLR <= '0';  SHAD_Z_LD <= '0';   				
                 I_FLAG_SET    <= '0';   I_FLAG_CLR <= '0';    IO_OE        <= '0';
                 --WRITE_STROBE  <= '0';   READ_STROBE <= '0';		            
             end if;
+        
+        when ST_int =>
+                        NS <= ST_fet;
+                        
+                        -- Repeat the default block for all variables here, noting that any output values desired to be different
+                        -- from init values shown below will be assigned in the following case statements for each opcode.
+                        PC_LD         <= '1';   PC_MUX_SEL  <= "10";   PC_RESET     <= '0';     PC_OE        <= '1';   PC_INC <= '0';                                        
+                        SP_LD         <= '1';   SP_MUX_SEL  <= "10";   SP_RESET     <= '0';
+                        RF_WR         <= '0';   RF_WR_SEL   <= "00";   RF_OE        <= '0';  
+                        REG_IMMED_SEL <= '0';   ALU_SEL     <= "0000";                   
+                        SCR_WR        <= '1';   SCR_OE      <= '0';    SCR_ADDR_SEL <= "11";                           
+                        C_FLAG_SEL    <= '0';   C_FLAG_LD   <= '0';    C_FLAG_SET   <= '0';  C_FLAG_CLR <= '0';  SHAD_C_LD <= '0';                   
+                        Z_FLAG_SEL    <= '0';   Z_FLAG_LD   <= '0';    Z_FLAG_SET   <= '0';  Z_FLAG_CLR <= '0';  SHAD_Z_LD <= '0';                   
+                        I_FLAG_SET    <= '0';   I_FLAG_CLR  <= '1';    IO_OE        <= '0';
         
         when others => 
             NS <= ST_fet;
@@ -374,8 +410,8 @@ begin
             RF_WR         <= '0';   RF_WR_SEL  <= "00";   RF_OE    <= '0';  
             REG_IMMED_SEL <= '0';   ALU_SEL    <= "0000";       			
             SCR_WR        <= '0';   SCR_OE     <= '0';    SCR_ADDR_SEL <= "00";       					
-            C_FLAG_SEL    <= "00";  C_FLAG_LD  <= '0';    C_FLAG_SET   <= '0';  C_FLAG_CLR <= '0';  SHAD_C_LD <= '0';   				
-            Z_FLAG_SEL    <= "00";  Z_FLAG_LD  <= '0';    Z_FLAG_SET   <= '0';  Z_FLAG_CLR <= '0';  SHAD_Z_LD <= '0';   				
+            C_FLAG_SEL    <= '0';  C_FLAG_LD  <= '0';    C_FLAG_SET   <= '0';  C_FLAG_CLR <= '0';  SHAD_C_LD <= '0';   				
+            Z_FLAG_SEL    <= '0';  Z_FLAG_LD  <= '0';    Z_FLAG_SET   <= '0';  Z_FLAG_CLR <= '0';  SHAD_Z_LD <= '0';   				
             I_FLAG_SET    <= '0';   I_FLAG_CLR <= '0';    IO_OE        <= '0';
             --WRITE_STROBE  <= '0';   READ_STROBE <= '0';				 
             

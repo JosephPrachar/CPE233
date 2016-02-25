@@ -69,12 +69,12 @@ architecture Behavioral of RAT_CPU is
             SCR_WR        : out  STD_LOGIC;
             SCR_OE        : out  STD_LOGIC;
             SCR_ADDR_SEL  : out  STD_LOGIC_VECTOR (1 downto 0);
-            C_FLAG_SEL    : out  STD_LOGIC_VECTOR (1 downto 0);
+            C_FLAG_SEL    : out  STD_LOGIC;
             C_FLAG_LD     : out  STD_LOGIC;
             C_FLAG_SET    : out  STD_LOGIC;
             C_FLAG_CLR    : out  STD_LOGIC;
             SHAD_C_LD     : out  STD_LOGIC;
-            Z_FLAG_SEL    : out  STD_LOGIC_VECTOR (1 downto 0);
+            Z_FLAG_SEL    : out  STD_LOGIC;
             Z_FLAG_LD     : out  STD_LOGIC;
             Z_FLAG_SET    : out  STD_LOGIC;
             Z_FLAG_CLR    : out  STD_LOGIC;
@@ -134,6 +134,15 @@ architecture Behavioral of RAT_CPU is
             OUT_FLAG : out  STD_LOGIC);
      end component;
      
+     component ShadowFlagReg
+        port (
+            F_IN : in  STD_LOGIC;
+            LD   : in  STD_LOGIC;
+            CLK  : in  STD_LOGIC;
+            FLAG : out STD_LOGIC
+        );
+     end component;
+     
      component StackPointer is
         port (
             D_IN_BUS  : in  STD_LOGIC_VECTOR (7 downto 0);
@@ -179,11 +188,10 @@ architecture Behavioral of RAT_CPU is
      signal ALU_OUT_C, ALU_OUT_Z : STD_LOGIC;
      
      -- C Flag signals
-     signal C_FLAG : STD_LOGIC;
-     signal C_SET, C_CLR, C_LD : STD_LOGIC;
+     signal C_FLAG, C_FLAG_SHAD, C_SET, C_CLR, C_LD, C_LD_SHAD, C_SEL : STD_LOGIC;
      
      -- Z Flag signals
-     signal Z_FLAG, Z_LD : STD_LOGIC;
+     signal Z_FLAG, Z_FLAG_SHAD, Z_SET, Z_CLR, Z_LD, Z_LD_SHAD, Z_SEL : STD_LOGIC;
      
      -- Stack signals
      signal SP_MUX_SEL : STD_LOGIC_VECTOR (1 downto 0);
@@ -195,18 +203,25 @@ architecture Behavioral of RAT_CPU is
      signal SCR_ADDR_SEL : STD_LOGIC_VECTOR (1 downto 0);
      signal SCR_ADDR : STD_LOGIC_VECTOR (7 downto 0);
      
+     -- Interrupt signals
+     signal I_FLAG, ISR_OUT, I_SET, I_CLR : STD_LOGIC;
+     
 begin
-    control : controlUnit PORT MAP (CLK, C_FLAG, Z_FLAG, INT_IN, RST, Instruction (17 downto 13), Instruction (1 downto 0), 
+    
+    ISR : FlagReg port map (INT_IN, '0', I_SET, I_CLR, CLK, ISR_OUT);
+    I_FLAG <= INT_IN and ISR_OUT;
+    
+    control : controlUnit PORT MAP (CLK, C_FLAG, Z_FLAG, I_FLAG, RST, Instruction (17 downto 13), Instruction (1 downto 0), 
         PC_LD, PC_INC, PC_RST, PC_OE, PC_MUX_SEL, 
         SP_LD, SP_MUX_SEL, SP_RST, 
         RF_WE, RF_WR_SEL, RF_OE, REG_IMMED_SEL, 
         ALU_SEL, 
         SCR_WR, SCR_OE, SCR_ADDR_SEL, 
-        open, C_LD, C_SET, C_CLR, open, 
-        open, Z_LD, open, open, open, 
-        open, open, IO_OE);
+        C_SEL, C_LD, C_SET, C_CLR, C_LD_SHAD, 
+        Z_SEL, Z_LD, Z_SET, Z_CLR, Z_LD_SHAD, 
+        I_SET, I_CLR, IO_OE);
 
-    pc : counter PORT MAP (Instruction (12 downto 3), MULTI_BUS (9 downto 0), Instruction (12 downto 3), PC_MUX_SEL, PC_OE, PC_LD, PC_INC, PC_RST, CLK, PC_COUNT, MULTI_BUS);
+    pc : counter PORT MAP (Instruction (12 downto 3), MULTI_BUS (9 downto 0), (others => '1'), PC_MUX_SEL, PC_OE, PC_LD, PC_INC, PC_RST, CLK, PC_COUNT, MULTI_BUS);
     progRom : prog_rom PORT MAP (PC_COUNT, Instruction, CLK);
     
     RF_DATA_IN <= ALU_OUT                when RF_WR_SEL = "00"
@@ -219,8 +234,11 @@ begin
     ALU_IN_B <= RF_OUT_Y when REG_IMMED_SEL = '0'
            else Instruction (7 downto 0);
     aluMod : alu PORT MAP (RF_OUT_X, ALU_IN_B, C_FLAG, ALU_SEL, ALU_OUT, ALU_OUT_C, ALU_OUT_Z);
-    cFlag : FlagReg PORT MAP (ALU_OUT_C, C_LD, C_SET, C_CLR, CLK, C_FLAG);
-    zFlag : FlagReg PORT MAP (ALU_OUT_Z, Z_LD, '0', '0', CLK, Z_FLAG);
+    
+    cFlag : FlagReg PORT MAP (ALU_OUT_C, C_LD, C_SET, C_CLR, CLK, C_FLAG_SHAD);
+    zFlag : FlagReg PORT MAP (ALU_OUT_Z, Z_LD, Z_SET, Z_CLR, CLK, Z_FLAG_SHAD);
+    cShadow : ShadowFlagReg port map (C_FLAG_SHAD, C_LD_SHAD, CLK, C_FLAG);
+    zShadow : ShadowFlagReg port map (Z_FLAG_SHAD, Z_LD_SHAD, CLK, Z_FLAG);
     
     stack : StackPointer port map (MULTI_BUS (7 downto 0), SP_MUX_SEL, SP_LD, SP_RST, CLK, SP, SP_DEC);
     

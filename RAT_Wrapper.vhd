@@ -24,10 +24,13 @@ use IEEE.STD_LOGIC_ARITH.ALL;
 use IEEE.STD_LOGIC_UNSIGNED.ALL;
 
 entity RAT_wrapper is
-    Port ( LEDS     : out   STD_LOGIC_VECTOR (7 downto 0);
-           SWITCHES : in    STD_LOGIC_VECTOR (7 downto 0);
-           RST      : in    STD_LOGIC;
-           CLK      : in    STD_LOGIC);
+    Port (
+        LEDS     : out   STD_LOGIC_VECTOR (7 downto 0);
+        SWITCHES : in    STD_LOGIC_VECTOR (7 downto 0);
+        BTN      : in    STD_LOGIC;
+        RST      : in    STD_LOGIC;
+        CLK      : in    STD_LOGIC
+    );
 end RAT_wrapper;
 
 architecture Behavioral of RAT_wrapper is
@@ -49,6 +52,14 @@ architecture Behavioral of RAT_wrapper is
       port (
          CLK   : in  std_logic;
          S_CLK : out std_logic
+      );
+   end component;
+   
+   component db_1shot
+      port (
+         A    : in  STD_LOGIC;
+         CLK  : in  STD_LOGIC;
+         A_DB : out STD_LOGIC
       );
    end component;
    
@@ -76,6 +87,7 @@ architecture Behavioral of RAT_wrapper is
    -------------------------------------------------------------------------------
    
    signal S_CLK : std_logic;
+   signal BTN_DEBOUNCE : STD_LOGIC;
 
 begin
 
@@ -88,7 +100,7 @@ begin
               PORT_ID  => s_port_id,
               RST      => RST,  
               IO_OE    => s_load,
-              INT_IN   => '0',
+              INT_IN   => BTN_DEBOUNCE,
               CLK      => S_CLK);
    -------------------------------------------------------------------------------
 
@@ -105,7 +117,8 @@ begin
       end if;
    end process inputs;
    -------------------------------------------------------------------------------
-
+    
+   BTN_DEBOUNCER : db_1shot port map (BTN, CLK, BTN_DEBOUNCE);
 
    -------------------------------------------------------------------------------
    -- MUX for updating output registers ------------------------------------------
