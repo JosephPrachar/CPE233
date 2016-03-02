@@ -55,7 +55,7 @@ architecture Behavioral of RAT_wrapper is
       );
    end component;
    
-   component db_1shot
+   component db_1shot_FSM
       port (
          A    : in  STD_LOGIC;
          CLK  : in  STD_LOGIC;
@@ -118,7 +118,7 @@ begin
    end process inputs;
    -------------------------------------------------------------------------------
     
-   BTN_DEBOUNCER : db_1shot port map (BTN, CLK, BTN_DEBOUNCE);
+   BTN_DEBOUNCER : db_1shot_FSM port map (BTN, CLK, BTN_DEBOUNCE);
 
    -------------------------------------------------------------------------------
    -- MUX for updating output registers ------------------------------------------

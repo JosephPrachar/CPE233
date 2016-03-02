@@ -410,8 +410,8 @@ begin
             RF_WR         <= '0';   RF_WR_SEL  <= "00";   RF_OE    <= '0';  
             REG_IMMED_SEL <= '0';   ALU_SEL    <= "0000";       			
             SCR_WR        <= '0';   SCR_OE     <= '0';    SCR_ADDR_SEL <= "00";       					
-            C_FLAG_SEL    <= '0';  C_FLAG_LD  <= '0';    C_FLAG_SET   <= '0';  C_FLAG_CLR <= '0';  SHAD_C_LD <= '0';   				
-            Z_FLAG_SEL    <= '0';  Z_FLAG_LD  <= '0';    Z_FLAG_SET   <= '0';  Z_FLAG_CLR <= '0';  SHAD_Z_LD <= '0';   				
+            C_FLAG_SEL    <= '0';   C_FLAG_LD  <= '0';    C_FLAG_SET   <= '0';  C_FLAG_CLR <= '0';  SHAD_C_LD <= '0';   				
+            Z_FLAG_SEL    <= '0';   Z_FLAG_LD  <= '0';    Z_FLAG_SET   <= '0';  Z_FLAG_CLR <= '0';  SHAD_Z_LD <= '0';   				
             I_FLAG_SET    <= '0';   I_FLAG_CLR <= '0';    IO_OE        <= '0';
             --WRITE_STROBE  <= '0';   READ_STROBE <= '0';				 
             
