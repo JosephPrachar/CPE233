@@ -103,6 +103,61 @@ CALC_LINE:   MOV R3, BITSEL_7
                BRNE FILL26
              RET
 
+;      -------
+;      |0 1 2|
+;Bits: |3 4 5|
+;      |6 7 8|
+;      -------
+; Simpler without writing a loop (although not prettier)
+COUNT_SUR:   MOV R4, 0x00
+             MOV R5, R1
+             MOV R6, R2
+             SUB R5, 0x01 ; Position check point over bit 0
+             SUB R6, 0x01
+             CALL GET_CELL
+             CMP R7, 0x00
+             BREQ CHECKBIT1
+             ADD R4, 0x01
+  CHECKBIT1: ADD R5, 0x01 ; Position check point over bit 1
+             CALL GET_CELL
+             CMP R7, 0x00
+             BREQ CHECKBIT2
+             ADD R4, 0x01
+  CHECKBIT2: ADD R5, 0x01 ; bit 2
+             CALL GET_CELL
+             CMP R7, 0x00
+             BREQ CHECKBIT3
+             ADD R4, 0x01
+  CHECKBIT3: SUB R5, 0x02 ; bit 3
+             ADD R6, 0x01
+             CALL GET_CELL
+             CMP R7, 0x00
+             BREQ CHECKBIT5
+             ADD R4, 0x01
+  CHECKBIT5: ADD R5, 0x02 ; bit 5
+             CALL GET_CELL
+             CMP R7, 0x00
+             BREQ CHECKBIT6
+             ADD R4, 0x01
+  CHECKBIT6: SUB R5, 0x02
+             ADD R6, 0x01
+             CALL GET_CELL
+             CMP R7, 0x00
+             BREQ CHECKBIT7
+             ADD R4, 0x01
+  CHECKBIT7: ADD R5, 0x01
+             CALL GET_CELL
+             CMP R7, 0x00
+             BREQ CHECKBIT8
+             ADD R4, 0x01
+  CHECKBIT8: ADD R5, 0x01
+             CALL GET_CELL
+             CMP R7, 0x00
+             BREQ COUNTSURRET
+             ADD R4, 0x01
+COUNTSURRET: RET
+
+             
 
                
                
