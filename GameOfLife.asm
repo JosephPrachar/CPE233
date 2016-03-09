@@ -11,6 +11,7 @@
 .EQU VIDEO_X    = 0x00
 .EQU VIDEO_Y    = 0x01
 .EQU VIDEO_DATA = 0x02
+.EQU VIDEO_IN   = 0x00
 
 ; Grid constants
 .EQU GRID_WIDTH  = 0x28 ; 40 in dec
@@ -157,7 +158,11 @@ COUNT_SUR:   MOV R4, 0x00
              ADD R4, 0x01
 COUNTSURRET: RET
 
-             
+GET_CELL:    OUT R5, VIDEO_X
+             OUT R6, VIDEO_Y
+             MOV R0, R0
+             IN  R7, VIDEO_IN
+             RET
 
                
                
