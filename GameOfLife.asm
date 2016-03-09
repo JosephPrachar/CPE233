@@ -7,12 +7,19 @@
 
 .DSEG
 .ORG 0x00
-; Main loop constants
+; CPU IO constants
+.EQU VIDEO_X    = 0x00
+.EQU VIDEO_Y    = 0x01
+.EQU VIDEO_DATA = 0x02
+
+; Grid constants
+.EQU GRID_WIDTH  = 0x28 ; 40 in dec
+.EQU GRID_HEIGHT = 0x1E ; 30 in dec
+
+; Interupt/input state constants
 .EQU NO_INPUT = 0x01
 .EQU COMPUTE_NEXT_FRAME = 0x01
 .EQU QUIT = 0x02
-
-.EQU VIDEO_OUT = 0x00
 
 .EQU BITSEL_0 = 0x01
 .EQU BITSEL_7 = 0X80
@@ -30,6 +37,17 @@ MAIN:        MOV  R0, 0x01 ; Add other init work here
              CALL COMPUTE
              BRN  WAITFORIN
 
+COMPUTE:     MOV R2, 0x00
+     Y_LOOP: MOV R1, 0x00
+     X_LOOP:   CALL CALC_LINE
+               CALL PRINT_BUF
+               CALL SHIFT_BUF
+               ADD R1, 0x01
+               CMP R1, GRID_WIDTH
+               BRNE X_LOOP
+             ADD R2, 0x01
+             CMP R2, GRID_HEIGHT
+             BRNE Y_LOOP
 
 
 DONE:        ; Do clean-up work
