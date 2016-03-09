@@ -1,0 +1,4 @@
+.CSEG
+.ORG 0x10
+
+MAIN: MOV R2, 0x01
