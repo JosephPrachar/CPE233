@@ -115,58 +115,75 @@ COUNT_SUR:   MOV R4, 0x00
              MOV R6, R2
              SUB R5, 0x01 ; Position check point over bit 0
              SUB R6, 0x01
-             CALL GET_CELL
+             CALL GET_CELL567
              CMP R7, 0x00
              BREQ CHECKBIT1
              ADD R4, 0x01
   CHECKBIT1: ADD R5, 0x01 ; Position check point over bit 1
-             CALL GET_CELL
+             CALL GET_CELL567
              CMP R7, 0x00
              BREQ CHECKBIT2
              ADD R4, 0x01
   CHECKBIT2: ADD R5, 0x01 ; bit 2
-             CALL GET_CELL
+             CALL GET_CELL567
              CMP R7, 0x00
              BREQ CHECKBIT3
              ADD R4, 0x01
   CHECKBIT3: SUB R5, 0x02 ; bit 3
              ADD R6, 0x01
-             CALL GET_CELL
+             CALL GET_CELL567
              CMP R7, 0x00
              BREQ CHECKBIT5
              ADD R4, 0x01
   CHECKBIT5: ADD R5, 0x02 ; bit 5
-             CALL GET_CELL
+             CALL GET_CELL567
              CMP R7, 0x00
              BREQ CHECKBIT6
              ADD R4, 0x01
-  CHECKBIT6: SUB R5, 0x02
+  CHECKBIT6: SUB R5, 0x02 ; bit 6
              ADD R6, 0x01
-             CALL GET_CELL
+             CALL GET_CELL567
              CMP R7, 0x00
              BREQ CHECKBIT7
              ADD R4, 0x01
-  CHECKBIT7: ADD R5, 0x01
-             CALL GET_CELL
+  CHECKBIT7: ADD R5, 0x01 ; bit 7
+             CALL GET_CELL567
              CMP R7, 0x00
              BREQ CHECKBIT8
              ADD R4, 0x01
-  CHECKBIT8: ADD R5, 0x01
-             CALL GET_CELL
+  CHECKBIT8: ADD R5, 0x01 ; bit 8
+             CALL GET_CELL567
              CMP R7, 0x00
              BREQ COUNTSURRET
              ADD R4, 0x01
 COUNTSURRET: RET
 
-GET_CELL:    OUT R5, VIDEO_X
+GET_CELL567: OUT R5, VIDEO_X
              OUT R6, VIDEO_Y
              MOV R0, R0
              IN  R7, VIDEO_IN
              RET
 
-               
-               
-             
+GET_CELL125: OUT R1, VIDEO_X
+             OUT R2, VIDEO_y
+             MOV R0, R0
+             IN  R5, VIDEO_IN
+             RET
+
+IS_ALIVE:    CALL GET_CELL125
+             CMP R5, 0x00
+             BREQ DEADCELL
+             CMP R4, 0x02
+             BREQ LIFE
+             CMP RF, 0x03
+             BREQ LIFE
+             BRN DEATH
+   DEADCELL: CMP R4, 0x03
+             BRNE DEATH
+       LIFE: MOV R4, 0xFF
+             BRN ISALIVERET
+      DEATH: MOV R4, 0x00
+ ISALIVERET: RET
 
 
 DONE:        ; Do clean-up work
