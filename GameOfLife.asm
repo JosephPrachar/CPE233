@@ -241,6 +241,13 @@ PRINT_BUF:   MOV R3, BITSEL_7
              ADD R21, 0x01
              RET
 
+SHIFT_BUF:   MOV R27, R22
+             MOV R28, R23
+             MOV R29, R24
+             MOV R30, R25
+             MOV R31, R26
+             RET
+
 SET_CELL45:  OUT R4, VIDEO_X
              OUT R21, VIDEO_Y
              OUT R5, VIDEO_DATA
