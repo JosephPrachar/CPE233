@@ -12,6 +12,7 @@
 .EQU VIDEO_Y    = 0x01
 .EQU VIDEO_DATA = 0x02
 .EQU VIDEO_IN   = 0x00
+.EQU COLOR_BLUE = 0x03
 
 ; Grid constants
 .EQU GRID_WIDTH  = 0x28 ; 40 in dec
@@ -38,17 +39,18 @@ MAIN:        MOV  R0, 0x01 ; Add other init work here
              CALL COMPUTE
              BRN  WAITFORIN
 
-COMPUTE:     MOV R2, 0x00
+COMPUTE:     MOV R21, 0x00
+             MOV R2, 0x00
      Y_LOOP: MOV R1, 0x00
-     X_LOOP:   CALL CALC_LINE
-               CALL PRINT_BUF
-               CALL SHIFT_BUF
-               ADD R1, 0x01
-               CMP R1, GRID_WIDTH
-               BRNE X_LOOP
-             ADD R2, 0x01
+             CALL CALC_LINE
+             CMP R2, 0x00
+             BREQ SKIPPRINT
+             CALL PRINT_BUF
+             CALL SHIFT_BUF
+  SKIPPRINT: ADD R2, 0x01
              CMP R2, GRID_HEIGHT
              BRNE Y_LOOP
+             CALL PRINT_BUF
              RET
 
 ; Notes about CALC_LINE
@@ -63,7 +65,7 @@ CALC_LINE:   MOV R3, BITSEL_7
                CALL IS_ALIVE ; Result is put into R4 [Dead=0x00;Alive=0xFF]
                AND R4, R3
                OR R22, R4
-               CLC
+               ADD R1, 0x01 ; Keep x pos current as well as clear carry
                LSR R3
                BRNE FILL22
              MOV R3, BITSEL_7
@@ -72,7 +74,7 @@ CALC_LINE:   MOV R3, BITSEL_7
                CALL IS_ALIVE
                AND R4, R3
                OR R23, R4
-               CLC
+               ADD R1, 0x01
                LSR R3
                BRNE FILL23
              MOV R3, BITSEL_7
@@ -81,7 +83,7 @@ CALC_LINE:   MOV R3, BITSEL_7
                CALL IS_ALIVE
                AND R4, R3
                OR R24, R4
-               CLC
+               ADD R1, 0x01
                LSR R3
                BRNE FILL24
              MOV R3, BITSEL_7
@@ -90,7 +92,7 @@ CALC_LINE:   MOV R3, BITSEL_7
                CALL IS_ALIVE
                AND R4, R3
                OR R25, R4
-               CLC
+               ADD R1, 0x01
                LSR R3
                BRNE FILL25
              MOV R3, BITSEL_7
@@ -99,7 +101,7 @@ CALC_LINE:   MOV R3, BITSEL_7
                CALL IS_ALIVE
                AND R4, R3
                OR R26, R4
-               CLC
+               ADD R1, 0x01
                LSR R3
                BRNE FILL26
              RET
@@ -185,6 +187,65 @@ IS_ALIVE:    CALL GET_CELL125
       DEATH: MOV R4, 0x00
  ISALIVERET: RET
 
+PRINT_BUF:   MOV R3, BITSEL_7
+             MOV R4, 0x00 ; x pos
+      PRINT27: MOV R5, 0x00 ; Color
+               MOV R6, R3
+               AND R6, R27
+               BREQ SKIPCOLOR27
+               MOV R5, COLOR_BLUE ; Cell is alive
+  SKIPCOLOR27: SET_CELL45
+               ADD R4, 0x01
+               LSR R3
+               BRNE PRINT27
+             MOV R3, BITSEL_7
+      PRINT28: MOV R5, 0x00 ; Color
+               MOV R6, R3
+               AND R6, R28
+               BREQ SKIPCOLOR28
+               MOV R5, COLOR_BLUE ; Cell is alive
+  SKIPCOLOR28: SET_CELL45
+               ADD R4, 0x01
+               LSR R3
+               BRNE PRINT28
+             MOV R3, BITSEL_7
+      PRINT29: MOV R5, 0x00 ; Color
+               MOV R6, R3
+               AND R6, R29
+               BREQ SKIPCOLOR29
+               MOV R5, COLOR_BLUE ; Cell is alive
+  SKIPCOLOR29: SET_CELL45
+               ADD R4, 0x01
+               LSR R3
+               BRNE PRINT29
+             MOV R3, BITSEL_7
+      PRINT30: MOV R5, 0x00 ; Color
+               MOV R6, R3
+               AND R6, R30
+               BREQ SKIPCOLOR30
+               MOV R5, COLOR_BLUE ; Cell is alive
+  SKIPCOLOR30: SET_CELL45
+               ADD R4, 0x01
+               LSR R3
+               BRNE PRINT30
+             MOV R3, BITSEL_7
+      PRINT31: MOV R5, 0x00 ; Color
+               MOV R6, R3
+               AND R6, R31
+               BREQ SKIPCOLOR31
+               MOV R5, COLOR_BLUE ; Cell is alive
+  SKIPCOLOR31: SET_CELL45
+               ADD R4, 0x01
+               LSR R3
+               BRNE PRINT31
+             ADD R21, 0x01
+             RET
+
+SET_CELL45:  OUT R4, VIDEO_X
+             OUT R21, VIDEO_Y
+             OUT R5, VIDEO_DATA
+             MOV R0, R0
+             RET
 
 DONE:        ; Do clean-up work
       DONE1: BRN DONE1
