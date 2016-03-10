@@ -194,7 +194,7 @@ PRINT_BUF:   MOV R3, BITSEL_7
                AND R6, R27
                BREQ SKIPCOLOR27
                MOV R5, COLOR_BLUE ; Cell is alive
-  SKIPCOLOR27: SET_CELL45
+  SKIPCOLOR27: CALL SET_CELL45
                ADD R4, 0x01
                LSR R3
                BRNE PRINT27
@@ -204,7 +204,7 @@ PRINT_BUF:   MOV R3, BITSEL_7
                AND R6, R28
                BREQ SKIPCOLOR28
                MOV R5, COLOR_BLUE ; Cell is alive
-  SKIPCOLOR28: SET_CELL45
+  SKIPCOLOR28: CALL SET_CELL45
                ADD R4, 0x01
                LSR R3
                BRNE PRINT28
@@ -214,7 +214,7 @@ PRINT_BUF:   MOV R3, BITSEL_7
                AND R6, R29
                BREQ SKIPCOLOR29
                MOV R5, COLOR_BLUE ; Cell is alive
-  SKIPCOLOR29: SET_CELL45
+  SKIPCOLOR29: CALL SET_CELL45
                ADD R4, 0x01
                LSR R3
                BRNE PRINT29
@@ -224,7 +224,7 @@ PRINT_BUF:   MOV R3, BITSEL_7
                AND R6, R30
                BREQ SKIPCOLOR30
                MOV R5, COLOR_BLUE ; Cell is alive
-  SKIPCOLOR30: SET_CELL45
+  SKIPCOLOR30: CALL SET_CELL45
                ADD R4, 0x01
                LSR R3
                BRNE PRINT30
@@ -234,7 +234,7 @@ PRINT_BUF:   MOV R3, BITSEL_7
                AND R6, R31
                BREQ SKIPCOLOR31
                MOV R5, COLOR_BLUE ; Cell is alive
-  SKIPCOLOR31: SET_CELL45
+  SKIPCOLOR31: CALL SET_CELL45
                ADD R4, 0x01
                LSR R3
                BRNE PRINT31

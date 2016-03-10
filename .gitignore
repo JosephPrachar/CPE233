@@ -1,1 +1,4 @@
 cpu/
+*.asl
+*.dbg
+*.err
