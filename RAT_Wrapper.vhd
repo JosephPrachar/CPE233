@@ -25,11 +25,15 @@ use IEEE.STD_LOGIC_UNSIGNED.ALL;
 
 entity RAT_wrapper is
     Port (
-        LEDS     : out   STD_LOGIC_VECTOR (7 downto 0);
         SWITCHES : in    STD_LOGIC_VECTOR (7 downto 0);
         BTN      : in    STD_LOGIC;
         RST      : in    STD_LOGIC;
-        CLK      : in    STD_LOGIC
+        CLK      : in    STD_LOGIC;
+        LEDS     : out   STD_LOGIC_VECTOR (7 downto 0);
+        
+        VGA_RGB  : out   STD_LOGIC_VECTOR (7 downto 0);
+        VGA_HS   : out   STD_LOGIC;
+        VGA_VS   : out   STD_LOGIC
     );
 end RAT_wrapper;
 
@@ -40,11 +44,15 @@ architecture Behavioral of RAT_wrapper is
    -- In future labs you can add more port IDs, and you'll have
    -- to add constants here for the mux below
    CONSTANT SWITCHES_ID : STD_LOGIC_VECTOR (7 downto 0) := X"20";
+   CONSTANT VGA_READ_ID : STD_LOGIC_VECTOR(7 downto 0) := x"00";
    -------------------------------------------------------------------------------
    
    -------------------------------------------------------------------------------
    -- OUTPUT PORT IDS ------------------------------------------------------------
    -- In future labs you can add more port IDs
+   CONSTANT VGA_XADDR_ID : STD_LOGIC_VECTOR(7 downto 0) := x"00";
+   CONSTANT VGA_YADDR_ID : STD_LOGIC_VECTOR(7 downto 0) := x"01";
+   CONSTANT VGA_WRITE_ID : STD_LOGIC_VECTOR(7 downto 0) := x"02";
    CONSTANT LEDS_ID       : STD_LOGIC_VECTOR (7 downto 0) := X"40";
    -------------------------------------------------------------------------------
    
@@ -61,6 +69,19 @@ architecture Behavioral of RAT_wrapper is
          CLK  : in  STD_LOGIC;
          A_DB : out STD_LOGIC
       );
+   end component;
+   
+   component vgaDriverBuffer
+       Port (         CLK, we : in std_logic;
+                      wa : in std_logic_vector (10 downto 0);
+                      wd : in std_logic_vector (7 downto 0);
+                      Rout : out std_logic_vector(2 downto 0);
+                      Gout : out std_logic_vector(2 downto 0);
+                      Bout : out std_logic_vector(1 downto 0);
+                      HS      : out std_logic;
+                      VS      : out std_logic;
+                      pixelData : out std_logic_vector(7 downto 0)
+                 );
    end component;
    
    -- Declare RAT_CPU ------------------------------------------------------------
@@ -82,6 +103,12 @@ architecture Behavioral of RAT_wrapper is
    signal s_load        : std_logic;
    --signal s_interrupt   : std_logic; -- not yet used
    
+      -- VGA signals
+   signal r_vga_we   : std_logic;                       -- Write enable
+   signal r_vga_wa   : std_logic_vector(10 downto 0);   -- The address to read from / write to  
+   signal r_vga_wd   : std_logic_vector(7 downto 0);    -- The pixel data to write to the framebuffer
+   signal r_vgaData  : std_logic_vector(7 downto 0);    -- The pixel data read from the framebuffer
+   
    -- Register definitions for output devices ------------------------------------
    signal r_LEDS        : std_logic_vector (7 downto 0); 
    -------------------------------------------------------------------------------
@@ -92,6 +119,7 @@ architecture Behavioral of RAT_wrapper is
 begin
 
    CLK_DIV : Clk_Divider port map (CLK, S_CLK);
+   BTN_DEBOUNCER : db_1shot_FSM port map (BTN, CLK, BTN_DEBOUNCE);
 
    -- Instantiate RAT_CPU --------------------------------------------------------
    CPU: RAT_CPU
@@ -103,7 +131,17 @@ begin
               INT_IN   => BTN_DEBOUNCE,
               CLK      => S_CLK);
    -------------------------------------------------------------------------------
-
+   VGA: vgaDriverBuffer
+      port map(CLK => CLK,
+               WE => r_vga_we,
+               WA => r_vga_wa,
+               WD => r_vga_wd,
+               Rout => VGA_RGB(7 downto 5),
+               Gout => VGA_RGB(4 downto 2),
+               Bout => VGA_RGB(1 downto 0),
+               HS => VGA_HS,
+               VS => VGA_VS,
+               pixelData => r_vgaData);
 
    ------------------------------------------------------------------------------- 
    -- MUX for selecting what input to read ---------------------------------------
@@ -112,13 +150,13 @@ begin
    begin
       if (s_port_id = SWITCHES_ID) then
          s_input_port <= SWITCHES;
+      elsif (s_port_id = VGA_READ_ID) then
+         s_input_port <= r_vgaData;
       else
          s_input_port <= x"00";
       end if;
    end process inputs;
    -------------------------------------------------------------------------------
-    
-   BTN_DEBOUNCER : db_1shot_FSM port map (BTN, CLK, BTN_DEBOUNCE);
 
    -------------------------------------------------------------------------------
    -- MUX for updating output registers ------------------------------------------
@@ -132,6 +170,20 @@ begin
             -- the register definition for the LEDS
             if (s_port_id = LEDS_ID) then
                r_LEDS <= s_output_port;
+               
+            -- VGA support
+            elsif (s_port_id = VGA_XADDR_ID) then
+               r_vga_wa(5 downto 0) <= s_output_port(5 downto 0);
+            elsif (s_port_id = VGA_YADDR_ID) then
+               r_vga_wa(10 downto 6) <= s_output_port(4 downto 0);
+            elsif (s_port_id = VGA_WRITE_ID) then
+               r_vga_wd <= s_output_port;
+            end if;
+            
+            if (s_port_id = VGA_WRITE_ID) then
+               r_vga_we <= '1';
+            else
+               r_vga_we <= '0';
             end if;
            
          end if; 
