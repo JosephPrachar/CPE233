@@ -17,15 +17,15 @@ use IEEE.STD_LOGIC_UNSIGNED.ALL;
 
 
 entity vgaDriverBuffer is
-    Port (         CLK, we : in std_logic;
-                   wa : in std_logic_vector (10 downto 0);
-                   wd : in std_logic_vector (7 downto 0);
-                   Rout : out std_logic_vector(2 downto 0);
-                   Gout : out std_logic_vector(2 downto 0);
-                   Bout : out std_logic_vector(1 downto 0);
-                   HS      : out std_logic;
-                   VS      : out std_logic;
-                   pixelData : out std_logic_vector(7 downto 0)
+    Port (         CLK, we      : in  std_logic;
+                   wa           : in  std_logic_vector (10 downto 0);
+                   wd           : in  std_logic_vector (7 downto 0);
+                   Rout         : out std_logic_vector(2 downto 0);
+                   Gout         : out std_logic_vector(2 downto 0);
+                   Bout         : out std_logic_vector(1 downto 0);
+                   HS           : out std_logic;
+                   VS           : out std_logic;
+                   pixelData    : out std_logic_vector(7 downto 0)
               );
 end vgaDriverBuffer;
 

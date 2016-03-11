@@ -31,7 +31,9 @@ entity RAT_wrapper is
         CLK      : in    STD_LOGIC;
         LEDS     : out   STD_LOGIC_VECTOR (7 downto 0);
         
-        VGA_RGB  : out   STD_LOGIC_VECTOR (7 downto 0);
+        VGA_RED  : out   STD_LOGIC_VECTOR (3 downto 0);
+        VGA_GRN  : out   STD_LOGIC_VECTOR (3 downto 0);
+        VGA_BLUE : out   STD_LOGIC_VECTOR (3 downto 0);
         VGA_HS   : out   STD_LOGIC;
         VGA_VS   : out   STD_LOGIC
     );
@@ -52,7 +54,8 @@ architecture Behavioral of RAT_wrapper is
    -- In future labs you can add more port IDs
    CONSTANT VGA_XADDR_ID : STD_LOGIC_VECTOR(7 downto 0) := x"00";
    CONSTANT VGA_YADDR_ID : STD_LOGIC_VECTOR(7 downto 0) := x"01";
-   CONSTANT VGA_WRITE_ID : STD_LOGIC_VECTOR(7 downto 0) := x"02";
+   CONSTANT VGA_COLOR_ID : STD_LOGIC_VECTOR(7 downto 0) := x"02";
+   CONSTANT VGA_WE_ID    : STD_LOGIC_VECTOR(7 downto 0) := x"03";
    CONSTANT LEDS_ID       : STD_LOGIC_VECTOR (7 downto 0) := X"40";
    -------------------------------------------------------------------------------
    
@@ -101,14 +104,24 @@ architecture Behavioral of RAT_wrapper is
    signal s_output_port : std_logic_vector (7 downto 0);
    signal s_port_id     : std_logic_vector (7 downto 0);
    signal s_load        : std_logic;
+   signal s_clk1        : std_logic := '0';
    --signal s_interrupt   : std_logic; -- not yet used
    
-      -- VGA signals
-   signal r_vga_we   : std_logic;                       -- Write enable
-   signal r_vga_wa   : std_logic_vector(10 downto 0);   -- The address to read from / write to  
-   signal r_vga_wd   : std_logic_vector(7 downto 0);    -- The pixel data to write to the framebuffer
-   signal r_vgaData  : std_logic_vector(7 downto 0);    -- The pixel data read from the framebuffer
+    -- VGA signals
+   signal s_vga_wa         : std_logic_vector(10 downto 0)  := (others => '0');
+   signal s_vga_wd         : std_logic_vector(7 downto 0)  := (others => '0');
+   signal s_vga_we         : std_logic := '1';
+   signal s_vga_pixelData  : std_logic_vector(7 downto 0)  := (others => '0');     
+   signal s_vga_yadd       : std_logic_vector(7 downto 0)  := (others => '0');
+   signal s_vga_xadd       : std_logic_vector(7 downto 0)  := (others => '0');
+   signal s_vga_color      : std_logic_vector(7 downto 0)  := (others => '0');
    
+   signal s_vga_red        : std_logic_vector(2 downto 0)  := (others => '1');
+   signal s_vga_grn        : std_logic_vector(2 downto 0)  := (others => '1');
+   signal s_vga_blue       : std_logic_vector(1 downto 0)  := (others => '1');
+   signal s_vga_hs         : std_logic := '0';
+   signal s_vga_vs         : std_logic := '0';
+      
    -- Register definitions for output devices ------------------------------------
    signal r_LEDS        : std_logic_vector (7 downto 0); 
    -------------------------------------------------------------------------------
@@ -132,16 +145,23 @@ begin
               CLK      => S_CLK);
    -------------------------------------------------------------------------------
    VGA: vgaDriverBuffer
-      port map(CLK => CLK,
-               WE => r_vga_we,
-               WA => r_vga_wa,
-               WD => r_vga_wd,
-               Rout => VGA_RGB(7 downto 5),
-               Gout => VGA_RGB(4 downto 2),
-               Bout => VGA_RGB(1 downto 0),
-               HS => VGA_HS,
-               VS => VGA_VS,
-               pixelData => r_vgaData);
+      port map(CLK => s_clk,
+               WE => s_vga_we,
+               WA => s_vga_wa,
+               WD => s_vga_wd,
+               Rout =>s_vga_red,
+               Gout => s_vga_grn,
+               Bout => s_vga_blue,
+               HS => s_vga_hs,
+               VS => s_vga_vs,
+               pixelData => s_vga_PixelData);
+               
+    CLK_div1: process(CLK)
+       begin
+           if(rising_edge(CLK)) then
+               s_clk1 <= not s_clk1;
+           end if;
+       end process CLK_div1;
 
    ------------------------------------------------------------------------------- 
    -- MUX for selecting what input to read ---------------------------------------
@@ -151,7 +171,7 @@ begin
       if (s_port_id = SWITCHES_ID) then
          s_input_port <= SWITCHES;
       elsif (s_port_id = VGA_READ_ID) then
-         s_input_port <= r_vgaData;
+         s_input_port <= s_vga_PixelData;
       else
          s_input_port <= x"00";
       end if;
@@ -166,32 +186,35 @@ begin
    begin   
       if (rising_edge(S_CLK)) then
          if (s_load = '1') then 
-           
-            -- the register definition for the LEDS
-            if (s_port_id = LEDS_ID) then
-               r_LEDS <= s_output_port;
-               
-            -- VGA support
-            elsif (s_port_id = VGA_XADDR_ID) then
-               r_vga_wa(5 downto 0) <= s_output_port(5 downto 0);
-            elsif (s_port_id = VGA_YADDR_ID) then
-               r_vga_wa(10 downto 6) <= s_output_port(4 downto 0);
-            elsif (s_port_id = VGA_WRITE_ID) then
-               r_vga_wd <= s_output_port;
-            end if;
+            case(s_port_id) is
             
-            if (s_port_id = VGA_WRITE_ID) then
-               r_vga_we <= '1';
-            else
-               r_vga_we <= '0';
-            end if;
-           
+                when LEDS_ID =>           
+                    r_LEDS <= s_output_port;                
+                                         
+                when VGA_YADDR_ID =>
+                    s_vga_yadd <= s_output_port;                
+                when VGA_XADDR_ID =>
+                    s_vga_xadd <= s_output_port;                
+                when VGA_COLOR_ID =>
+                    s_vga_color <= s_output_port;                    
+                when VGA_WE_ID =>
+                    s_vga_we    <= s_output_port(0);
+                    
+                when others => 
+            end case;           
          end if; 
       end if;
    end process outputs;      
    -------------------------------------------------------------------------------
 
    -- Register Interface Assignments ---------------------------------------------
-   LEDS <= r_LEDS; 
+   LEDS <= r_LEDS;
+   s_vga_wa <= s_vga_yadd(4 downto 0) & s_vga_xadd(5 downto 0);
+   s_vga_wd <= s_vga_color;
+   VGA_RED  <= s_vga_red & '0';
+   VGA_GRN  <= s_vga_grn & '0';
+   VGA_BLUE <= s_vga_blue & "00";
+   VGA_HS   <= s_vga_hs;
+   VGA_VS   <= s_vga_vs;
 
 end Behavioral;

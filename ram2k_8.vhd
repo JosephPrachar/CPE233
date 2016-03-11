@@ -26,7 +26,7 @@ end ram2k_8;
 
 architecture Behavioral of ram2k_8 is
 type ramtype is array (2047 downto 0) of STD_LOGIC_VECTOR(7 downto 0);
-  signal mem: ramtype := (others => (others => '0'));
+  signal mem: ramtype := (OTHERS => "11100000");
 begin
   -- three-ported register file
   -- read two ports combinationally
@@ -43,4 +43,3 @@ begin
   pixelVal <= mem(CONV_INTEGER(wa));  
 
 end Behavioral;
-

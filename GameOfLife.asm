@@ -11,8 +11,11 @@
 .EQU VIDEO_X    = 0x00
 .EQU VIDEO_Y    = 0x01
 .EQU VIDEO_DATA = 0x02
+.EQU VIDEO_WE   = 0x03
 .EQU VIDEO_IN   = 0x00
 .EQU COLOR_BLUE = 0x03
+
+.EQU LED_PORT   = 0x40
 
 ; Grid constants
 .EQU GRID_WIDTH   = 0x28 ; 40 in dec
@@ -29,9 +32,9 @@
 
 .CSEG
 .ORG 0x10
-
+BRN DONE
 MAIN:        CALL CLEAR
-             MOV  R0, 0x01 ; Add other init work here
+             MOV  R0, 0x00 ; Add other init work here
   WAITFORIN: CMP  R0, NO_INPUT
              BREQ WAITFORIN ; Wait for input from user
              CMP  R0, QUIT
@@ -55,7 +58,7 @@ COMPUTE:     MOV R21, 0x00
              CALL PRINT_BUF
              RET
 
-CLEAR:       MOV R5, 0x00
+CLEAR:       MOV R5, 0xFF
              MOV R21, 0x00
    YLOOPCLR: MOV R4, 0x00
    XLOOPCLR: CALL SET_CELL45
@@ -297,7 +300,10 @@ SHIFT_BUF:   MOV R27, R22
 SET_CELL45:  OUT R4, VIDEO_X
              OUT R21, VIDEO_Y
              OUT R5, VIDEO_DATA
-             MOV R0, R0
+             MOV R20, 0x01
+             OUT R20, VIDEO_WE
+             MOV R20, 0x00
+             OUT R20, VIDEO_WE
              RET
 
 DONE:        ; Do clean-up work

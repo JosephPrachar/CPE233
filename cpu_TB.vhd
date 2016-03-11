@@ -44,7 +44,9 @@ architecture Behavioral of cpu_TB is
             CLK      : in    STD_LOGIC;
             LEDS     : out   STD_LOGIC_VECTOR (7 downto 0);
             
-            VGA_RGB  : out   STD_LOGIC_VECTOR (7 downto 0);
+            VGA_RED  : out   STD_LOGIC_VECTOR (3 downto 0);
+            VGA_GRN  : out   STD_LOGIC_VECTOR (3 downto 0);
+            VGA_BLUE : out   STD_LOGIC_VECTOR (3 downto 0);
             VGA_HS   : out   STD_LOGIC;
             VGA_VS   : out   STD_LOGIC
         );
@@ -52,10 +54,10 @@ architecture Behavioral of cpu_TB is
     
     signal RST, CLK : STD_LOGIC;
     signal LEDS, SWITCHES : STD_LOGIC_VECTOR (7 downto 0);    
-    signal VGA_RGB  : STD_LOGIC_VECTOR (7 downto 0);
+    signal VGA_R, VGA_G, VGA_B  : STD_LOGIC_VECTOR (3 downto 0);
     signal VGA_HS, VGA_VS : STD_LOGIC;
 begin
-    cpu : RAT_WRAPPER PORT MAP (SWITCHES, '0', RST, CLK, LEDS, VGA_RGB, VGA_HS, VGA_VS);
+    cpu : RAT_WRAPPER PORT MAP (SWITCHES, '0', RST, CLK, LEDS, VGA_R, VGA_G, VGA_B, VGA_HS, VGA_VS);
     
     process
     begin 
