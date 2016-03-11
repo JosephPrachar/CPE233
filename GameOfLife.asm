@@ -12,7 +12,7 @@
 .EQU VIDEO_Y    = 0x01
 .EQU VIDEO_DATA = 0x02
 .EQU VIDEO_WE   = 0x03
-.EQU VIDEO_IN   = 0x00
+.EQU VIDEO_IN   = 0x04
 .EQU COLOR_BLUE = 0x03
 
 .EQU LED_PORT   = 0x40
@@ -32,10 +32,17 @@
 
 .CSEG
 .ORG 0x10
+
+MOV R5, 0x1C
+MOV R21, 0x05
+MOV R4, 0x05
+CALL SET_CELL45
 BRN DONE
-MAIN:        CALL CLEAR
+MAIN:        
              MOV  R0, 0x00 ; Add other init work here
+             MOV R5, 0xFF
   WAITFORIN: CMP  R0, NO_INPUT
+             CALL CLEAR
              BREQ WAITFORIN ; Wait for input from user
              CMP  R0, QUIT
              BREQ DONE
@@ -58,7 +65,7 @@ COMPUTE:     MOV R21, 0x00
              CALL PRINT_BUF
              RET
 
-CLEAR:       MOV R5, 0xFF
+CLEAR:       MOV R5, 0xE0
              MOV R21, 0x00
    YLOOPCLR: MOV R4, 0x00
    XLOOPCLR: CALL SET_CELL45
