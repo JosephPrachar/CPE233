@@ -238,7 +238,7 @@ begin
     C_TEMP <= ALU_OUT_C when (C_SEL = '0')
          else C_FLAG_SHAD;
     Z_TEMP <= ALU_OUT_Z when (Z_SEL = '0')
-         else Z_FLAG_SHAD;    
+         else Z_FLAG_SHAD;
     cFlag : FlagReg PORT MAP (C_TEMP, C_LD, C_SET, C_CLR, CLK, C_FLAG);
     zFlag : FlagReg PORT MAP (Z_TEMP, Z_LD, Z_SET, Z_CLR, CLK, Z_FLAG);
     cShadow : ShadowFlagReg port map (C_FLAG, C_LD_SHAD, CLK, C_FLAG_SHAD);
