@@ -54,8 +54,8 @@ architecture Behavioral of RAT_wrapper is
    CONSTANT LEDS_ID       : STD_LOGIC_VECTOR (7 downto 0) := X"40";
    CONSTANT SEGMENTS_ID   : STD_LOGIC_VECTOR (7 downto 0) := X"81";
    CONSTANT AN_ID         : STD_LOGIC_VECTOR (7 downto 0) := X"82";
-   CONSTANT VGA_HADD_ID   : STD_LOGIC_VECTOR (7 downto 0) := X"00";
-   CONSTANT VGA_LADD_ID   : STD_LOGIC_VECTOR (7 downto 0) := X"01";
+   CONSTANT VGA_YADD_ID   : STD_LOGIC_VECTOR (7 downto 0) := X"00";
+   CONSTANT VGA_XADD_ID   : STD_LOGIC_VECTOR (7 downto 0) := X"01";
    CONSTANT VGA_COLOR_ID  : STD_LOGIC_VECTOR (7 downto 0) := X"02";
    CONSTANT VGA_WE_ID     : STD_LOGIC_VECTOR (7 downto 0) := X"03";
    CONSTANT VGA_PIXEL_DATA_ID  : STD_LOGIC_VECTOR (7 downto 0) := X"04";
@@ -114,8 +114,8 @@ architecture Behavioral of RAT_wrapper is
     signal s_vga_wd         : std_logic_vector(7 downto 0)  := (others => '0');
     signal s_vga_we         : std_logic := '0';
     signal s_vga_pixelData  : std_logic_vector(7 downto 0)  := (others => '0');     
-    signal s_vga_hadd       : std_logic_vector(7 downto 0)  := (others => '0');
-    signal s_vga_ladd       : std_logic_vector(7 downto 0)  := (others => '0');
+    signal s_vga_yadd       : std_logic_vector(7 downto 0)  := (others => '0');
+    signal s_vga_xadd       : std_logic_vector(7 downto 0)  := (others => '0');
     signal s_vga_color      : std_logic_vector(7 downto 0)  := (others => '0');
     
     signal s_vga_red        : std_logic_vector(2 downto 0)  := (others => '1');
@@ -211,11 +211,11 @@ begin
                 when SEGMENTS_ID =>
                     temp_SEGMENTS <= s_output_port;             
                 
-                when VGA_HADD_ID =>
-                    s_vga_hadd <= s_output_port;
+                when VGA_YADD_ID =>
+                    s_vga_yadd <= s_output_port;
                 
-                when VGA_LADD_ID =>
-                    s_vga_ladd <= s_output_port;
+                when VGA_XADD_ID =>
+                    s_vga_xadd <= s_output_port;
                 
                 when VGA_COLOR_ID =>
                     s_vga_color <= s_output_port;    
@@ -234,7 +234,7 @@ begin
 
    -- Register Interface Assignments ---------------------------------------------
    LEDS     <= temp_LEDS; 
-   s_vga_wa <= s_vga_hadd(2 downto 0) & s_vga_ladd;
+   s_vga_wa <= s_vga_yadd(4 downto 0) & s_vga_xadd(5 downto 0);
    s_vga_wd <= s_vga_color;
    VGA_RED  <= s_vga_red & '0';
    VGA_GRN  <= s_vga_grn & '0';
