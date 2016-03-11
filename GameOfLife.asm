@@ -30,7 +30,8 @@
 .CSEG
 .ORG 0x10
 
-MAIN:        MOV  R0, 0x01 ; Add other init work here
+MAIN:        CALL CLEAR
+             MOV  R0, 0x01 ; Add other init work here
   WAITFORIN: CMP  R0, NO_INPUT
              BREQ WAITFORIN ; Wait for input from user
              CMP  R0, QUIT
@@ -53,6 +54,19 @@ COMPUTE:     MOV R21, 0x00
              BRNE Y_LOOP
              CALL PRINT_BUF
              RET
+
+CLEAR:       MOV R5, 0x00
+             MOV R21, 0x00
+   YLOOPCLR: MOV R4, 0x00
+   XLOOPCLR: CALL SET_CELL45
+             ADD R4, 0x01
+             CMP R4, GRID_WIDTH
+             BRNE XLOOPCLR
+             ADD R21, 0x01
+             CMP R21, GRID_HEIGHT
+             BRNE YLOOPCLR
+             RET
+             
 
 ; Notes about CALC_LINE
 ; Yes this is repetitive, but to keep the buffer stored in the registers there
