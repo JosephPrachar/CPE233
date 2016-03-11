@@ -19,7 +19,7 @@
 .EQU GRID_HEIGHT = 0x1E ; 30 in dec
 
 ; Interupt/input state constants
-.EQU NO_INPUT = 0x01
+.EQU NO_INPUT = 0x00
 .EQU COMPUTE_NEXT_FRAME = 0x01
 .EQU QUIT = 0x02
 
@@ -45,8 +45,8 @@ COMPUTE:     MOV R21, 0x00
              CMP R2, 0x00
              BREQ SKIPPRINT
              CALL PRINT_BUF
-             CALL SHIFT_BUF
-  SKIPPRINT: ADD R2, 0x01
+  SKIPPRINT: CALL SHIFT_BUF
+             ADD R2, 0x01
              CMP R2, GRID_HEIGHT
              BRNE Y_LOOP
              CALL PRINT_BUF
