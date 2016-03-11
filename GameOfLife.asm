@@ -15,8 +15,10 @@
 .EQU COLOR_BLUE = 0x03
 
 ; Grid constants
-.EQU GRID_WIDTH  = 0x28 ; 40 in dec
-.EQU GRID_HEIGHT = 0x1E ; 30 in dec
+.EQU GRID_WIDTH   = 0x28 ; 40 in dec
+.EQU GRID_WIDTH1  = 0x27 ; 39 in dec
+.EQU GRID_HEIGHT  = 0x1E ; 30 in dec
+.EQU GRID_HEIGHT1 = 0x1D ; 29 in dec
 
 ; Interupt/input state constants
 .EQU NO_INPUT = 0x00
@@ -112,6 +114,10 @@ CALC_LINE:   MOV R3, BITSEL_7
 ;      -------
 ; Simpler without writing a loop (although not prettier)
 COUNT_SUR:   MOV R4, 0x00
+             CMP R2, 0x00 ; Check if bit is on top row
+             BREQ CHECKBIT3
+             CMP R1, 0x00
+             BREQ CHECKBIT1
              MOV R5, R1
              MOV R6, R2
              SUB R5, 0x01 ; Position check point over bit 0
@@ -120,39 +126,66 @@ COUNT_SUR:   MOV R4, 0x00
              CMP R7, 0x00
              BREQ CHECKBIT1
              ADD R4, 0x01
-  CHECKBIT1: ADD R5, 0x01 ; Position check point over bit 1
+  CHECKBIT1: MOV R5, R1 ; Position over bit 1
+             MOV R6, R2
+             SUB R6, 0x01
              CALL GET_CELL567
              CMP R7, 0x00
              BREQ CHECKBIT2
              ADD R4, 0x01
-  CHECKBIT2: ADD R5, 0x01 ; bit 2
+  CHECKBIT2: CMP R1, GRID_WIDTH1
+             BREQ CHECKBIT3
+             MOV R5, R1
+             MOV R6, R2
+             ADD R5, 0x01 ; Position check point over bit 2
+             ADD R6, 0x01
              CALL GET_CELL567
              CMP R7, 0x00
              BREQ CHECKBIT3
              ADD R4, 0x01
-  CHECKBIT3: SUB R5, 0x02 ; bit 3
-             ADD R6, 0x01
+  CHECKBIT3: CMP R1, 0x00
+             BREQ CHECKBIT5
+             MOV R5, R1
+             MOV R6, R2
+             SUB R5, 0x01 ; Position check point over bit 3
              CALL GET_CELL567
              CMP R7, 0x00
              BREQ CHECKBIT5
              ADD R4, 0x01
-  CHECKBIT5: ADD R5, 0x02 ; bit 5
+  CHECKBIT5: CMP R1, GRID_WIDTH1
+             BREQ CHECKBIT6
+             MOV R5, R1
+             MOV R6, R2
+             ADD R5, 0x01 ; Position check point over bit 5
              CALL GET_CELL567
              CMP R7, 0x00
              BREQ CHECKBIT6
              ADD R4, 0x01
-  CHECKBIT6: SUB R5, 0x02 ; bit 6
+  CHECKBIT6: CMP R2, GRID_HEIGHT1
+             BREQ COUNTSURRET
+             CMP R1, 0x00
+             BREQ CHECKBIT7
+             MOV R5, R1
+             MOV R6, R2
+             SUB R5, 0x01 ; Position check point over bit 6
              ADD R6, 0x01
              CALL GET_CELL567
              CMP R7, 0x00
              BREQ CHECKBIT7
              ADD R4, 0x01
-  CHECKBIT7: ADD R5, 0x01 ; bit 7
+  CHECKBIT7: MOV R5, R1
+             MOV R6, R2
+             SUB R6, 0x01 ; Position over bit 7
              CALL GET_CELL567
              CMP R7, 0x00
              BREQ CHECKBIT8
              ADD R4, 0x01
-  CHECKBIT8: ADD R5, 0x01 ; bit 8
+  CHECKBIT8: CMP R1, GRID_WIDTH1
+             BREQ COUNTSURRET
+             MOV R5, R1
+             MOV R6, R2
+             ADD R5, 0x01 ; Position check point over bit 8
+             ADD R6, 0x01
              CALL GET_CELL567
              CMP R7, 0x00
              BREQ COUNTSURRET
