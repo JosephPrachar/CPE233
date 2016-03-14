@@ -8,14 +8,14 @@
 .DSEG
 .ORG 0x00
 ; CPU IO constants
-.EQU VIDEO_Y    = 0x00
-.EQU VIDEO_X    = 0x01
-.EQU VIDEO_DATA = 0x02
-.EQU VIDEO_WE   = 0x03
-.EQU VIDEO_IN   = 0x04
+.EQU VIDEO_Y    = 0x90
+.EQU VIDEO_X    = 0x91
+.EQU VIDEO_DATA = 0x92
+.EQU VIDEO_IN   = 0x93
 .EQU COLOR_BLUE = 0x03
 
 .EQU LED_PORT   = 0x40
+.EQU SWITCHES   = 0x20
 
 ; Grid constants
 .EQU GRID_WIDTH   = 0x28 ; 40 in dec
@@ -31,38 +31,255 @@
 .EQU BITSEL_7 = 0X80
 
 .CSEG
-.ORG 0x10
+.ORG 0x15
 
-MOV R5, 0x1C
-MOV R21, 0x00
-MOV R4, 0x00
-LABEL: CALL SET_CELL45
-ADD R21, 0x02
-ADD R4, 0x01
-CMP R21, GRID_HEIGHT
-BRCS LABEL
+MOV R5, 0xFF
 
-MOV R1, 0x00
-MOV R2, 0x00
-CALL GET_CELL125
-MOV R4, 0x01
 MOV R21, 0x00
+MOV R4, 0x18
 CALL SET_CELL45
-BRN DONE
-MAIN:        
+
+MOV R21, 0x01
+MOV R4, 0x16
+CALL SET_CELL45
+MOV R4, 0x18
+CALL SET_CELL45
+
+MOV R21, 0x02
+MOV R4, 0x0C
+CALL SET_CELL45
+MOV R4, 0x0D
+CALL SET_CELL45
+MOV R4, 0x14
+CALL SET_CELL45
+MOV R4, 0x15
+CALL SET_CELL45
+MOV R4, 0x22
+CALL SET_CELL45
+MOV R4, 0x23
+CALL SET_CELL45
+
+MOV R21, 0x03
+MOV R4, 0x0B
+CALL SET_CELL45
+MOV R4, 0x0F
+CALL SET_CELL45
+MOV R4, 0x14
+CALL SET_CELL45
+MOV R4, 0x15
+CALL SET_CELL45
+MOV R4, 0x22
+CALL SET_CELL45
+MOV R4, 0x23
+CALL SET_CELL45
+
+MOV R21, 0x04
+MOV R4, 0x00
+CALL SET_CELL45
+MOV R4, 0x01
+CALL SET_CELL45
+MOV R4, 0x0A
+CALL SET_CELL45
+MOV R4, 0x10
+CALL SET_CELL45
+MOV R4, 0x14
+CALL SET_CELL45
+MOV R4, 0x15
+CALL SET_CELL45
+
+MOV R21, 0x05
+MOV R4, 0x00
+CALL SET_CELL45
+MOV R4, 0x01
+CALL SET_CELL45
+MOV R4, 0x0A
+CALL SET_CELL45
+MOV R4, 0x0E
+CALL SET_CELL45
+MOV R4, 0x10
+CALL SET_CELL45
+MOV R4, 0x11
+CALL SET_CELL45
+MOV R4, 0x16
+CALL SET_CELL45
+MOV R4, 0x18
+CALL SET_CELL45
+
+MOV R21, 0x06
+MOV R4, 0x0A
+CALL SET_CELL45
+MOV R4, 0x10
+CALL SET_CELL45
+MOV R4, 0x18
+CALL SET_CELL45
+
+MOV R21, 0x07
+MOV R4, 0x0B
+CALL SET_CELL45
+MOV R4, 0x0F
+CALL SET_CELL45
+
+MOV R21, 0x08
+MOV R4, 0x0C
+CALL SET_CELL45
+MOV R4, 0x0D
+CALL SET_CELL45
+
+; TEST 3
+
+;MOV R5, 0xFF
+;MOV R6, 0xFF
+;CALL GET_CELL567
+;MOV R5, R7
+;MOV R21, 0x00
+;MOV R4, 0x00
+;CALL SET_CELL45
+
+
+;MOV R5, 0xFF
+
+;MOV R21, 0x01
+;MOV R4, 0x01
+;CALL SET_CELL45
+;MOV R4, 0x02
+;CALL SET_CELL45
+;MOV R4, 0x03
+;CALL SET_CELL45
+;MOV R4, 0x11
+;CALL SET_CELL45
+;MOV R4, 0x12
+;CALL SET_CELL45
+;MOV R4, 0x15
+;CALL SET_CELL45
+;MOV R4, 0x16
+;CALL SET_CELL45
+
+;MOV R21, 0x02
+;MOV R4, 0x08
+;CALL SET_CELL45
+;MOV R4, 0x0B
+;CALL SET_CELL45
+;MOV R4, 0x12
+;CALL SET_CELL45
+;MOV R4, 0x15
+;CALL SET_CELL45
+
+;MOV R21, 0x03
+;MOV R4, 0x07
+;CALL SET_CELL45
+;MOV R4, 0x08
+;CALL SET_CELL45
+;MOV R4, 0x0B
+;CALL SET_CELL45
+;MOV R4, 0x0C
+;CALL SET_CELL45
+
+;MOV R21, 0x08
+;MOV R4, 0x01
+;CALL SET_CELL45
+;MOV R4, 0x02
+;CALL SET_CELL45
+;MOV R4, 0x03
+;CALL SET_CELL45
+
+; TEST 2
+;MOV R21, 0x01
+
+;MOV R4, 0x00
+;CALL SET_CELL45
+;MOV R4, 0x01
+;CALL SET_CELL45
+;MOV R4, 0x02
+;CALL SET_CELL45
+;MOV R4, 0x04
+;CALL SET_CELL45
+;MOV R4, 0x05
+;CALL SET_CELL45
+;MOV R4, 0x08
+;CALL SET_CELL45
+;MOV R4, 0x0C
+;CALL SET_CELL45
+;MOV R4, 0x0D
+;CALL SET_CELL45
+;MOV R4, 0x0E
+;CALL SET_CELL45
+
+;MOV R21, 0x02
+;MOV R4, 0x01
+;CALL SET_CELL45
+;MOV R4, 0x05
+;CALL SET_CELL45
+;MOV R4, 0x09
+;CALL SET_CELL45
+;MOV R4, 0x0D
+;CALL SET_CELL45
+;MOV R4, 0x0E
+;CALL SET_CELL45
+
+;TEST 1
+;MOV R21, 0x03
+;MOV R4, 0x03
+;CALL SET_CELL45
+
+;MOV R21, 0x13
+;MOV R4, 0x05
+;CALL SET_CELL45
+;MOV R4, 0x06
+;CALL SET_CELL45
+;MOV R4, 0x07
+;CALL SET_CELL45
+
+;MOV R4, 0x15
+;CALL SET_CELL45
+;MOV R4, 0x16
+;CALL SET_CELL45
+;MOV R21, 0x14
+;CALL SET_CELL45
+;MOV R4, 0x15
+;CALL SET_CELL45
+
+
+MAIN:        ;CALL CLEAR
              MOV  R0, 0x00 ; Add other init work here
-             MOV R5, 0xFF
+             MOV R20, 0x01
+             MOV R5, 0x00
   WAITFORIN: CMP  R0, NO_INPUT
-             CALL CLEAR
-             BREQ WAITFORIN ; Wait for input from user
-             CMP  R0, QUIT
-             BREQ DONE
-             CMP  R0, COMPUTE_NEXT_FRAME
-             BRNE WAITFORIN
+             ;BREQ WAITFORIN ; Wait for input from user
+             ;CMP  R0, QUIT
+             ;BREQ DONE
+             ;CMP  R0, COMPUTE_NEXT_FRAME
+             ;BRNE WAITFORIN
+             OR R20, 0x04
+             OUT R20, LED_PORT
              CALL COMPUTE
+             CALL PAUSE
+		     EXOR R20, 0x07
              BRN  WAITFORIN
 
-COMPUTE:     MOV R21, 0x00
+PAUSE:       MOV R19, 0x00
+ PAUSELOOP1: MOV R18, 0x00
+ PAUSELOOP2: MOV R17, 0x00
+             MOV R17, 0x00
+             MOV R17, 0x00
+             MOV R17, 0x00
+             MOV R17, 0x00
+             MOV R17, 0x00
+             MOV R17, 0x00
+             MOV R17, 0x00
+             MOV R17, 0x00
+             MOV R17, 0x00
+             MOV R17, 0x00
+             ADD R18, 0x01
+             CMP R18, 0xFF
+             BRNE PAUSELOOP2
+             ADD R19, 0x01
+             CMP R19, 0xFF
+             BRNE PAUSELOOP1
+             RET
+
+COMPUTE:     OR R20, 0x08
+             OUT R20, LED_PORT
+             MOV R21, 0x00
              MOV R2, 0x00
      Y_LOOP: MOV R1, 0x00
              CALL CALC_LINE
@@ -74,9 +291,11 @@ COMPUTE:     MOV R21, 0x00
              CMP R2, GRID_HEIGHT
              BRNE Y_LOOP
              CALL PRINT_BUF
+             EXOR R20, 0x08
+             OUT R20, LED_PORT
              RET
 
-CLEAR:       MOV R5, 0xE0
+CLEAR:       MOV R5, 0xFF
              MOV R21, 0x00
    YLOOPCLR: MOV R4, 0x00
    XLOOPCLR: CALL SET_CELL45
@@ -95,7 +314,9 @@ CLEAR:       MOV R5, 0xE0
 ;using the ScratchRAM by incrementing an address each time this function
 ;switches to a new regester
 
-CALC_LINE:   MOV R3, BITSEL_7
+CALC_LINE:   OR R20, 0x10
+             OUT R20, LED_PORT
+             MOV R3, BITSEL_7
              MOV R22, 0x00
      FILL22:   CALL COUNT_SUR
                CALL IS_ALIVE ; Result is put into R4 [Dead=0x00;Alive=0xFF]
@@ -132,7 +353,7 @@ CALC_LINE:   MOV R3, BITSEL_7
                LSR R3
                BRNE FILL25
              MOV R3, BITSEL_7
-             MOV R25, 0x00
+             MOV R26, 0x00
      FILL26:   CALL COUNT_SUR
                CALL IS_ALIVE
                AND R4, R3
@@ -140,6 +361,8 @@ CALC_LINE:   MOV R3, BITSEL_7
                ADD R1, 0x01
                LSR R3
                BRNE FILL26
+             EXOR R20, 0x10
+             OUT R20, LED_PORT
              RET
 
 ;      -------
@@ -148,11 +371,8 @@ CALC_LINE:   MOV R3, BITSEL_7
 ;      |6 7 8|
 ;      -------
 ; Simpler without writing a loop (although not prettier)
+
 COUNT_SUR:   MOV R4, 0x00
-             CMP R2, 0x00 ; Check if bit is on top row
-             BREQ CHECKBIT3
-             CMP R1, 0x00
-             BREQ CHECKBIT1
              MOV R5, R1
              MOV R6, R2
              SUB R5, 0x01 ; Position check point over bit 0
@@ -161,66 +381,39 @@ COUNT_SUR:   MOV R4, 0x00
              CMP R7, 0x00
              BREQ CHECKBIT1
              ADD R4, 0x01
-  CHECKBIT1: MOV R5, R1 ; Position over bit 1
-             MOV R6, R2
-             SUB R6, 0x01
+  CHECKBIT1: ADD R5, 0x01 ; Position check point over bit 1
              CALL GET_CELL567
              CMP R7, 0x00
              BREQ CHECKBIT2
              ADD R4, 0x01
-  CHECKBIT2: CMP R1, GRID_WIDTH1
+  CHECKBIT2: ADD R5, 0x01 ; bit 2
+             CALL GET_CELL567
+             CMP R7, 0x00
              BREQ CHECKBIT3
-             MOV R5, R1
-             MOV R6, R2
-             ADD R5, 0x01 ; Position check point over bit 2
+             ADD R4, 0x01
+  CHECKBIT3: SUB R5, 0x02 ; bit 3
              ADD R6, 0x01
              CALL GET_CELL567
              CMP R7, 0x00
-             BREQ CHECKBIT3
-             ADD R4, 0x01
-  CHECKBIT3: CMP R1, 0x00
-             BREQ CHECKBIT5
-             MOV R5, R1
-             MOV R6, R2
-             SUB R5, 0x01 ; Position check point over bit 3
-             CALL GET_CELL567
-             CMP R7, 0x00
              BREQ CHECKBIT5
              ADD R4, 0x01
-  CHECKBIT5: CMP R1, GRID_WIDTH1
-             BREQ CHECKBIT6
-             MOV R5, R1
-             MOV R6, R2
-             ADD R5, 0x01 ; Position check point over bit 5
+  CHECKBIT5: ADD R5, 0x02 ; bit 5
              CALL GET_CELL567
              CMP R7, 0x00
              BREQ CHECKBIT6
              ADD R4, 0x01
-  CHECKBIT6: CMP R2, GRID_HEIGHT1
-             BREQ COUNTSURRET
-             CMP R1, 0x00
-             BREQ CHECKBIT7
-             MOV R5, R1
-             MOV R6, R2
-             SUB R5, 0x01 ; Position check point over bit 6
+  CHECKBIT6: SUB R5, 0x02 ; bit 6
              ADD R6, 0x01
              CALL GET_CELL567
              CMP R7, 0x00
              BREQ CHECKBIT7
              ADD R4, 0x01
-  CHECKBIT7: MOV R5, R1
-             MOV R6, R2
-             SUB R6, 0x01 ; Position over bit 7
+  CHECKBIT7: ADD R5, 0x01 ; bit 7
              CALL GET_CELL567
              CMP R7, 0x00
              BREQ CHECKBIT8
              ADD R4, 0x01
-  CHECKBIT8: CMP R1, GRID_WIDTH1
-             BREQ COUNTSURRET
-             MOV R5, R1
-             MOV R6, R2
-             ADD R5, 0x01 ; Position check point over bit 8
-             ADD R6, 0x01
+  CHECKBIT8: ADD R5, 0x01 ; bit 8
              CALL GET_CELL567
              CMP R7, 0x00
              BREQ COUNTSURRET
@@ -229,22 +422,22 @@ COUNTSURRET: RET
 
 GET_CELL567: OUT R5, VIDEO_X
              OUT R6, VIDEO_Y
-             MOV R0, R0
              IN  R7, VIDEO_IN
              RET
 
 GET_CELL125: OUT R1, VIDEO_X
              OUT R2, VIDEO_y
-             MOV R0, R0
              IN  R5, VIDEO_IN
              RET
 
 IS_ALIVE:    CALL GET_CELL125
              CMP R5, 0x00
+             ;BREQ DEATH
+             ;BRN LIFE
              BREQ DEADCELL
              CMP R4, 0x02
              BREQ LIFE
-             CMP RF, 0x03
+             CMP R4, 0x03
              BREQ LIFE
              BRN DEATH
    DEADCELL: CMP R4, 0x03
@@ -318,11 +511,14 @@ SHIFT_BUF:   MOV R27, R22
 SET_CELL45:  OUT R4, VIDEO_X
              OUT R21, VIDEO_Y
              OUT R5, VIDEO_DATA
-             MOV R20, 0x01
-             OUT R20, VIDEO_WE
-             MOV R20, 0x00
-             OUT R20, VIDEO_WE
              RET
 
 DONE:        ; Do clean-up work
       DONE1: BRN DONE1
+
+ISR:        MOV R0, 0x01
+            ;OUT R0, LED_PORT
+            RETIE            
+
+.ORG 0x3FF
+BRN ISR
