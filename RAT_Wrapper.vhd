@@ -46,6 +46,7 @@ architecture Behavioral of RAT_wrapper is
    -- In future labs you can add more port IDs, and you'll have
    -- to add constants here for the mux below
    CONSTANT SWITCHES_ID : STD_LOGIC_VECTOR (7 downto 0) := X"20";
+   CONSTANT VGA_READ_ID : STD_LOGIC_VECTOR (7 downto 0) := X"93";
    -------------------------------------------------------------------------------
    
    -------------------------------------------------------------------------------
@@ -54,11 +55,9 @@ architecture Behavioral of RAT_wrapper is
    CONSTANT LEDS_ID       : STD_LOGIC_VECTOR (7 downto 0) := X"40";
    CONSTANT SEGMENTS_ID   : STD_LOGIC_VECTOR (7 downto 0) := X"81";
    CONSTANT AN_ID         : STD_LOGIC_VECTOR (7 downto 0) := X"82";
-   CONSTANT VGA_YADD_ID   : STD_LOGIC_VECTOR (7 downto 0) := X"00";
-   CONSTANT VGA_XADD_ID   : STD_LOGIC_VECTOR (7 downto 0) := X"01";
-   CONSTANT VGA_COLOR_ID  : STD_LOGIC_VECTOR (7 downto 0) := X"02";
-   CONSTANT VGA_WE_ID     : STD_LOGIC_VECTOR (7 downto 0) := X"03";
-   CONSTANT VGA_PIXEL_DATA_ID  : STD_LOGIC_VECTOR (7 downto 0) := X"04";
+   CONSTANT VGA_YADD_ID   : STD_LOGIC_VECTOR (7 downto 0) := X"90";
+   CONSTANT VGA_XADD_ID   : STD_LOGIC_VECTOR (7 downto 0) := X"91";
+   CONSTANT VGA_COLOR_ID  : STD_LOGIC_VECTOR (7 downto 0) := X"92";
    CONSTANT BUTTONS_ID  : STD_LOGIC_VECTOR (7 downto 0) := X"50";
    -------------------------------------------------------------------------------
 
@@ -180,11 +179,14 @@ begin
    inputs: process(s_port_id, SWITCHES)
    begin
       case(s_port_id) is
-            when VGA_PIXEL_DATA_ID =>
+            when VGA_READ_ID =>
                 s_input_port <= s_vga_pixelData;
                 
             when BUTTONS_ID =>
                 s_input_port <= "0000" & BUTTONS;
+                
+            when SWITCHES_ID =>
+                s_input_port <= SWITCHES;
                 
             when others =>
                 s_input_port <= x"00";
@@ -218,15 +220,18 @@ begin
                     s_vga_xadd <= s_output_port;
                 
                 when VGA_COLOR_ID =>
-                    s_vga_color <= s_output_port;    
-                    
-                when VGA_WE_ID =>
-                    s_vga_we    <= s_output_port(0); 
-                      
+                    s_vga_color <= s_output_port;                          
                     
                 when others =>
             
             end case;           
+            
+            if (s_port_id = VGA_COLOR_ID) then
+                s_vga_we <= '1';
+            else
+                s_vga_we <= '0';
+            end if;
+            
          end if; 
       end if;
    end process outputs;      
