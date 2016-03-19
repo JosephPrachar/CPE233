@@ -240,12 +240,11 @@ begin
     C_IN <= ALU_OUT_C when C_SEL = '0'
        else C_FLAG_SHAD;
     Z_IN <= ALU_OUT_Z when Z_SEL = '0'
-       else Z_FLAG_SHAD;
-    
-    cFlag : FlagReg PORT MAP (C_IN, C_LD, C_SET, C_CLR, CLK, C_FLAG_SHAD);
-    zFlag : FlagReg PORT MAP (Z_IN, Z_LD, Z_SET, Z_CLR, CLK, Z_FLAG_SHAD);
-    cShadow : ShadowFlagReg port map (C_FLAG_SHAD, C_LD_SHAD, CLK, C_FLAG);
-    zShadow : ShadowFlagReg port map (Z_FLAG_SHAD, Z_LD_SHAD, CLK, Z_FLAG);
+       else Z_FLAG_SHAD;    
+    cFlag : FlagReg PORT MAP (C_IN, C_LD, C_SET, C_CLR, CLK, C_FLAG);
+    zFlag : FlagReg PORT MAP (Z_IN, Z_LD, Z_SET, Z_CLR, CLK, Z_FLAG);
+    cShadow : ShadowFlagReg port map (C_FLAG, C_LD_SHAD, CLK, C_FLAG_SHAD);
+    zShadow : ShadowFlagReg port map (Z_FLAG, Z_LD_SHAD, CLK, Z_FLAG_SHAD);
     
     stack : StackPointer port map (MULTI_BUS (7 downto 0), SP_MUX_SEL, SP_LD, SP_RST, CLK, SP, SP_DEC);
     
