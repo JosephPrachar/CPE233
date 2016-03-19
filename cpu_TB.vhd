@@ -37,27 +37,18 @@ end cpu_TB;
 
 architecture Behavioral of cpu_TB is
     component RAT_WRAPPER
-        Port (
+        Port ( LEDS     : out   STD_LOGIC_VECTOR (7 downto 0);
             SWITCHES : in    STD_LOGIC_VECTOR (7 downto 0);
             BTN      : in    STD_LOGIC;
             RST      : in    STD_LOGIC;
-            CLK      : in    STD_LOGIC;
-            LEDS     : out   STD_LOGIC_VECTOR (7 downto 0);
-            
-            VGA_RED  : out   STD_LOGIC_VECTOR (3 downto 0);
-            VGA_GRN  : out   STD_LOGIC_VECTOR (3 downto 0);
-            VGA_BLUE : out   STD_LOGIC_VECTOR (3 downto 0);
-            VGA_HS   : out   STD_LOGIC;
-            VGA_VS   : out   STD_LOGIC
-        );
+            CLK      : in    STD_LOGIC);
     end component;
     
-    signal RST, CLK : STD_LOGIC;
+    signal BTN, RST, CLK : STD_LOGIC;
     signal LEDS, SWITCHES : STD_LOGIC_VECTOR (7 downto 0);    
-    signal VGA_R, VGA_G, VGA_B  : STD_LOGIC_VECTOR (3 downto 0);
-    signal VGA_HS, VGA_VS : STD_LOGIC;
+    
 begin
-    cpu : RAT_WRAPPER PORT MAP (SWITCHES, '0', RST, CLK, LEDS, VGA_R, VGA_G, VGA_B, VGA_HS, VGA_VS);
+    cpu : RAT_WRAPPER PORT MAP (LEDS, SWITCHES, BTN, RST, CLK);
     
     process
     begin 
@@ -74,6 +65,13 @@ begin
         wait for 50ns;
         
         RST <= '0';
+        
+        wait for 10050ns;
+        BTN <= '1';
+        wait for 400ns;
+        BTN <= '0';
+        
         wait;
+        
     end process;
 end Behavioral;

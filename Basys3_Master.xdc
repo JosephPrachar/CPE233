@@ -5,9 +5,11 @@
 
 ## Clock signal
 set_property PACKAGE_PIN W5 [get_ports CLK]
-set_property IOSTANDARD LVCMOS33 [get_ports CLK]
-create_clock -period 10.000 -name sys_clk_pin -waveform {0.000 5.000} -add [get_ports CLK]
+    set_property IOSTANDARD LVCMOS33 [get_ports CLK]
+    create_clock -period 10.000 -name sys_clk_pin -waveform {0.000 5.000} -add [get_ports CLK]
 
+set_property CFGBVS VCCO [current_design]
+    set_property CONFIG_VOLTAGE 3.3 [current_design]
 #set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets INT]
 
 ## Switches
@@ -112,8 +114,8 @@ set_property IOSTANDARD LVCMOS33 [get_ports {AN[0]}]
 ##Buttons
 set_property PACKAGE_PIN U18 [get_ports {BUTTONS[2]}] 
 set_property IOSTANDARD LVCMOS33 [get_ports {BUTTONS[2]}]
-#set_property PACKAGE_PIN T18 [get_ports btnU]
-#set_property IOSTANDARD LVCMOS33 [get_ports btnU]
+set_property PACKAGE_PIN T18 [get_ports RST]
+set_property IOSTANDARD LVCMOS33 [get_ports RST]
 set_property PACKAGE_PIN W19 [get_ports {BUTTONS[1]}] 
 set_property IOSTANDARD LVCMOS33 [get_ports {BUTTONS[1]}]
 set_property PACKAGE_PIN T17 [get_ports {BUTTONS[0]}] 
