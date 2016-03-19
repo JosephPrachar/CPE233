@@ -32,6 +32,7 @@
 .ORG 0x15
 
 ; Begin setup
+CALL CLEAR
 
 ; initial color is white
 MOV R5, 0xFF
@@ -136,21 +137,16 @@ MOV R4, 0x0D
 CALL SET_CELL45
 
 ; Program start
-MAIN:        ;CALL CLEAR
-             MOV  R0, 0x00 ; Add other init work here
+MAIN:        MOV  R0, 0x00 ; Add other init work here
              MOV  R20, 0x01
              MOV  R5, 0x00
-  WAITFORIN: CMP  R0, NO_INPUT
-             ;BREQ WAITFORIN ; Wait for input from user
-             ;CMP  R0, QUIT
-             ;BREQ DONE
-             ;CMP  R0, COMPUTE_NEXT_FRAME
-             ;BRNE WAITFORIN
-             OR   R20, 0x04
-             OUT  R20, LED_PORT
+  WAITFORIN: IN   R0, SWITCHES
+             CMP  R0, NO_INPUT
+             BREQ WAITFORIN ; Wait for input from user
              CALL COMPUTE
+             CMP  R0, 0x03
+             BREQ WAITFORIN
              CALL PAUSE
-		     EXOR R20, 0x07
              BRN  WAITFORIN
 
 PAUSE:       MOV  R19, 0x00
@@ -174,9 +170,7 @@ PAUSE:       MOV  R19, 0x00
              BRNE PAUSELOOP1
              RET
 
-COMPUTE:     OR   R20, 0x08
-             OUT  R20, LED_PORT
-             MOV  R21, 0x00
+COMPUTE:     MOV  R21, 0x00
              MOV  R2, 0x00
      Y_LOOP: MOV  R1, 0x00
              CALL CALC_LINE
@@ -188,11 +182,9 @@ COMPUTE:     OR   R20, 0x08
              CMP  R2, GRID_HEIGHT
              BRNE Y_LOOP
              CALL PRINT_BUF
-             EXOR R20, 0x08
-             OUT  R20, LED_PORT
              RET
 
-CLEAR:       MOV  R5, 0xFF
+CLEAR:       MOV  R5, 0x00
              MOV  R21, 0x00
    YLOOPCLR: MOV  R4, 0x00
    XLOOPCLR: CALL SET_CELL45
@@ -211,9 +203,7 @@ CLEAR:       MOV  R5, 0xFF
 ;using the ScratchRAM by incrementing an address each time this function
 ;switches to a new regester
 
-CALC_LINE:   OR   R20, 0x10
-             OUT  R20, LED_PORT
-             MOV  R3, BITSEL_7
+CALC_LINE:   MOV  R3, BITSEL_7
              MOV  R22, 0x00
      FILL22:   CALL COUNT_SUR
                CALL IS_ALIVE ; Result is put into R4 [Dead=0x00;Alive=0xFF]
@@ -258,8 +248,6 @@ CALC_LINE:   OR   R20, 0x10
                ADD  R1, 0x01
                LSR  R3
                BRNE FILL26
-             EXOR R20, 0x10
-             OUT  R20, LED_PORT
              RET
 
 ;      -------
