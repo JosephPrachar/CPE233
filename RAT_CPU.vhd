@@ -189,9 +189,11 @@ architecture Behavioral of RAT_CPU is
      
      -- C Flag signals
      signal C_FLAG, C_FLAG_SHAD, C_SET, C_CLR, C_LD, C_LD_SHAD, C_SEL : STD_LOGIC;
+     signal C_IN : STD_LOGIC;
      
      -- Z Flag signals
      signal Z_FLAG, Z_FLAG_SHAD, Z_SET, Z_CLR, Z_LD, Z_LD_SHAD, Z_SEL : STD_LOGIC;
+     signal Z_IN : STD_LOGIC;
      
      -- Stack signals
      signal SP_MUX_SEL : STD_LOGIC_VECTOR (1 downto 0);
@@ -235,8 +237,13 @@ begin
            else Instruction (7 downto 0);
     aluMod : alu PORT MAP (RF_OUT_X, ALU_IN_B, C_FLAG, ALU_SEL, ALU_OUT, ALU_OUT_C, ALU_OUT_Z);
     
-    cFlag : FlagReg PORT MAP (ALU_OUT_C, C_LD, C_SET, C_CLR, CLK, C_FLAG_SHAD);
-    zFlag : FlagReg PORT MAP (ALU_OUT_Z, Z_LD, Z_SET, Z_CLR, CLK, Z_FLAG_SHAD);
+    C_IN <= ALU_OUT_C when C_SEL = '0'
+       else C_FLAG_SHAD;
+    Z_IN <= ALU_OUT_Z when Z_SEL = '0'
+       else Z_FLAG_SHAD;
+    
+    cFlag : FlagReg PORT MAP (C_IN, C_LD, C_SET, C_CLR, CLK, C_FLAG_SHAD);
+    zFlag : FlagReg PORT MAP (Z_IN, Z_LD, Z_SET, Z_CLR, CLK, Z_FLAG_SHAD);
     cShadow : ShadowFlagReg port map (C_FLAG_SHAD, C_LD_SHAD, CLK, C_FLAG);
     zShadow : ShadowFlagReg port map (Z_FLAG_SHAD, Z_LD_SHAD, CLK, Z_FLAG);
     
