@@ -12,7 +12,7 @@
 .EQU VIDEO_X    = 0x91
 .EQU VIDEO_DATA = 0x92
 .EQU VIDEO_IN   = 0x93
-.EQU COLOR_BLUE = 0x03
+.EQU COLOR_GREEN = 0x03
 
 .EQU LED_PORT   = 0x40
 .EQU SWITCHES   = 0x20
@@ -348,7 +348,7 @@ PRINT_BUF:   MOV  R3, BITSEL_7
                MOV  R6, R3
                AND  R6, R27
                BREQ SKIPCOLOR27
-               MOV  R5, COLOR_BLUE ; Cell is alive
+               MOV  R5, COLOR_GREEN ; Cell is alive
   SKIPCOLOR27: CALL SET_CELL45
                ADD  R4, 0x01
                LSR  R3
@@ -358,7 +358,7 @@ PRINT_BUF:   MOV  R3, BITSEL_7
                MOV  R6, R3
                AND  R6, R28
                BREQ SKIPCOLOR28
-               MOV  R5, COLOR_BLUE ; Cell is alive
+               MOV  R5, COLOR_GREEN ; Cell is alive
   SKIPCOLOR28: CALL SET_CELL45
                ADD  R4, 0x01
                LSR  R3
@@ -368,7 +368,7 @@ PRINT_BUF:   MOV  R3, BITSEL_7
                MOV  R6, R3
                AND  R6, R29
                BREQ SKIPCOLOR29
-               MOV  R5, COLOR_BLUE ; Cell is alive
+               MOV  R5, COLOR_GREEN ; Cell is alive
   SKIPCOLOR29: CALL SET_CELL45
                ADD  R4, 0x01
                LSR  R3
@@ -378,7 +378,7 @@ PRINT_BUF:   MOV  R3, BITSEL_7
                MOV  R6, R3
                AND  R6, R30
                BREQ SKIPCOLOR30
-               MOV  R5, COLOR_BLUE ; Cell is alive
+               MOV  R5, COLOR_GREEN ; Cell is alive
   SKIPCOLOR30: CALL SET_CELL45
                ADD  R4, 0x01
                LSR  R3
@@ -388,7 +388,7 @@ PRINT_BUF:   MOV  R3, BITSEL_7
                MOV  R6, R3
                AND  R6, R31
                BREQ SKIPCOLOR31
-               MOV  R5, COLOR_BLUE ; Cell is alive
+               MOV  R5, COLOR_GREEN ; Cell is alive
   SKIPCOLOR31: CALL SET_CELL45
                ADD  R4, 0x01
                LSR  R3
