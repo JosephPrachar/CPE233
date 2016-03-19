@@ -68,9 +68,7 @@ begin
         end case;
     end process;
     
-    -- account for overflow during subtraction
-    SUM <= not(temp_s (7 downto 0)) + 1 when ((SEL = "0010" or SEL = "0011") and temp_s(8) = '1')
-           else temp_s(7 downto 0);
+    SUM <= temp_s(7 downto 0);
     
     Z_FLAG <= '1' when (temp_s = "000000000" or temp_s = "100000000") else '0';
     C_FLAG <= temp_s(8);

@@ -47,12 +47,19 @@ architecture Behavioral of RAT_wrapper is
    -- In future labs you can add more port IDs, and you'll have
    -- to add constants here for the mux below
    CONSTANT SWITCHES_ID : STD_LOGIC_VECTOR (7 downto 0) := X"20";
+   CONSTANT VGA_READ_ID : STD_LOGIC_VECTOR (7 downto 0) := X"93";
    -------------------------------------------------------------------------------
    
    -------------------------------------------------------------------------------
    -- OUTPUT PORT IDS ------------------------------------------------------------
    -- In future labs you can add more port IDs
    CONSTANT LEDS_ID       : STD_LOGIC_VECTOR (7 downto 0) := X"40";
+   CONSTANT SEGMENTS_ID   : STD_LOGIC_VECTOR (7 downto 0) := X"81";
+   CONSTANT AN_ID         : STD_LOGIC_VECTOR (7 downto 0) := X"82";
+   CONSTANT VGA_YADD_ID   : STD_LOGIC_VECTOR (7 downto 0) := X"90";
+   CONSTANT VGA_XADD_ID   : STD_LOGIC_VECTOR (7 downto 0) := X"91";
+   CONSTANT VGA_COLOR_ID  : STD_LOGIC_VECTOR (7 downto 0) := X"92";
+   CONSTANT BUTTONS_ID  : STD_LOGIC_VECTOR (7 downto 0) := X"50";
    -------------------------------------------------------------------------------
    
    CONSTANT SEGMENTS_ID        : STD_LOGIC_VECTOR (7 downto 0) := X"81";
